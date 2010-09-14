@@ -3,43 +3,42 @@ require 'spec_helper'
 describe EY::Serverside::Adapter::EnableMaintenancePage do
   context "with valid arguments" do
 
-    before(:each) do
-      @adapter = described_class.new do |builder|
+    let(:command) do
+      adapter = described_class.new do |builder|
         builder.app = "rackapp"
         builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
       end
+      adapter.call {|cmd| cmd}
     end
 
     it "invokes the correct version of engineyard-serverside" do
-      @adapter.call {|cmd| cmd.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_/}
+      command.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_/
     end
 
     it "puts the app in the command line" do
-      @adapter.call {|cmd| cmd.should =~ /--app rackapp/}
+      command.should =~ /--app rackapp/
     end
     
     it "puts the instances in the command line" do
-      @adapter.call do |cmd|
-        cmd.should =~ /--instances localhost/
-        cmd.should =~ /--instance-roles localhost:han,solo/
-        cmd.should =~ /--instance-names localhost:chewie/
-      end
+      command.should =~ /--instances localhost/
+      command.should =~ /--instance-roles localhost:han,solo/
+      command.should =~ /--instance-names localhost:chewie/
     end
 
     it "properly quotes odd arguments just in case" do
-      @adapter = described_class.new do |builder|
+      adapter = described_class.new do |builder|
         builder.app = "rack app"
         builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
       end
-      @adapter.call {|cmd| cmd.should =~ /--app 'rack app'/}
+      adapter.call {|cmd| cmd.should =~ /--app 'rack app'/}
     end    
 
     it "invokes the right deploy subcommand" do
-      @adapter.call {|cmd| cmd.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy enable_maintenance_page/ }
+      command.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy enable_maintenance_page/
     end
 
     it "invokes exactly the right command" do
-      @adapter.call {|cmd| cmd.should == 'engineyard-serverside _0.0.1_ deploy enable_maintenance_page --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie' }
+      command.should == 'engineyard-serverside _0.0.1_ deploy enable_maintenance_page --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie'
     end
   end
 
