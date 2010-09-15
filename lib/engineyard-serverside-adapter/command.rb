@@ -36,7 +36,7 @@ module EY
           end
         end
 
-        def instances_argument(instances)
+        def instances_argument(_, instances)
           role_pairs = instances.inject({}) do |roles, instance|
             roles.merge(instance[:hostname] => instance[:roles].join(','))
           end

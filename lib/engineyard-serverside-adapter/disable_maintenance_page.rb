@@ -3,6 +3,10 @@ module EY
     module Adapter
       class DisableMaintenancePage < Action
 
+        option :app,       :string,    :required => true
+        option :instances, :instances, :required => true
+        option :verbose,   :boolean
+
       private
 
         def task

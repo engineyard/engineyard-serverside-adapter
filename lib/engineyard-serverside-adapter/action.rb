@@ -20,29 +20,39 @@ module EY
           block.call command.to_s
         end
 
+        class << self
+          attr_accessor :options
+
+          def option(name, type, extra={:required => false})
+            self.options ||= {}
+            options[name] = extra.merge({:type => type})
+          end
+        end
+
+
       private
 
         def extract_state_from_builder(builder)
-          @instances = builder.instances
-          @app       = builder.app
-          @verbose   = builder.verbose
+          @state = self.class.options.inject({}) do |acc, (option_name, option_attrs)|
+            acc.merge(option_name => builder.send(option_name))
+          end
         end
 
         def command
           cmd = Command.new(*task)
-          cmd.string_argument    '--app', @app
-          cmd.instances_argument @instances
-          cmd.boolean_argument   '--verbose', @verbose
+          @state.each do |option_name, value|
+            option_type = self.class.options[option_name][:type]
+            switch = "--" + option_name.to_s.gsub(/_/, '-')
+            cmd.send("#{option_type}_argument", switch, value)
+          end
           cmd
         end
 
         def validate!
-          unless @instances
-            raise ArgumentError, "Required field 'instances' not provided."
-          end
-
-          unless @app
-            raise ArgumentError, "Required field 'app' not provided."
+          self.class.options.each do |option_name, option_attrs|
+            if option_attrs[:required] && !@state[option_name]
+              raise ArgumentError, "Required field '#{option_name}' not provided."
+            end
           end
         end
 
