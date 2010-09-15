@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EY::Serverside::Adapter::EnableMaintenancePage do
+describe EY::Serverside::Adapter::DisableMaintenancePage do
   context "with valid arguments" do
 
     let(:command) do
@@ -34,11 +34,11 @@ describe EY::Serverside::Adapter::EnableMaintenancePage do
     end    
 
     it "invokes the right deploy subcommand" do
-      command.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy enable_maintenance_page/
+      command.should =~ /engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy disable_maintenance_page/
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy enable_maintenance_page --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie"
+      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy disable_maintenance_page --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie"
     end
   end
 
@@ -71,7 +71,7 @@ describe EY::Serverside::Adapter::EnableMaintenancePage do
 
       adapter.call {|cmd| cmd.should_not =~ /--verbose/}
     end
-end
+  end
 
   context "with missing arguments" do
     def raises_argument_error(&block)

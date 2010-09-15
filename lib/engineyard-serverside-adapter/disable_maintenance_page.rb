@@ -1,12 +1,12 @@
 module EY
   module Serverside
     module Adapter
-      class EnableMaintenancePage < Action
+      class DisableMaintenancePage < Action
 
       private
 
         def task
-          ['deploy', 'enable_maintenance_page']
+          ['deploy', 'disable_maintenance_page']
         end
 
       end
