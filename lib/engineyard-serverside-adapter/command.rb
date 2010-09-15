@@ -51,11 +51,15 @@ module EY
         end
 
         def json_argument(switch, value)
-          string_argument(switch, value.to_json)
+          if value
+            string_argument(switch, value.to_json)
+          end
         end
 
         def string_argument(switch, value)
-          @arguments << [switch, value]
+          unless value.to_s.empty?
+            @arguments << [switch, value]
+          end
         end
 
       end

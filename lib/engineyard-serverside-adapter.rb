@@ -4,8 +4,9 @@ module EY
       autoload :Action,                 'engineyard-serverside-adapter/action'
       autoload :Builder,                'engineyard-serverside-adapter/builder'
       autoload :Command,                'engineyard-serverside-adapter/command'
-      autoload :EnableMaintenancePage,  'engineyard-serverside-adapter/enable_maintenance_page'
+      autoload :Deploy,                 'engineyard-serverside-adapter/deploy'
       autoload :DisableMaintenancePage, 'engineyard-serverside-adapter/disable_maintenance_page'
+      autoload :EnableMaintenancePage,  'engineyard-serverside-adapter/enable_maintenance_page'
       autoload :Integrate,              'engineyard-serverside-adapter/integrate'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
     end

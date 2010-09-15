@@ -10,6 +10,8 @@ module BuilderHelpers
       :app           => 'rackapp',
       :framework_env => 'production',
       :instances     => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
+      :ref           => 'master',
+      :repo          => 'git@github.com:engineyard/engineyard-serverside.git',
       :stack         => 'nginx_unicorn',
     }
   end
@@ -47,7 +49,6 @@ module RequiredFieldHelpers
   end
 end
 
-
 Spec::Runner.configure do |config|
   config.include BuilderHelpers
   config.extend RequiredFieldHelpers
@@ -80,17 +81,30 @@ Spec::Runner.configure do |config|
     :migrate       => '--migrate',
   }.each do |arg, switch|
     shared_examples_for "it accepts #{arg}" do
-      context "the #{arg} arg" do
-        it "puts the #{switch} in the command line" do
-          adapter = described_class.new(builder_with(arg => 'word'))
-          adapter.call {|cmd| cmd.should =~ /#{switch} word/}
-        end
-
-        it "handles arguments that need to be escaped" do
-          adapter = described_class.new(builder_with(arg => 'two words'))
-          adapter.call {|cmd| cmd.should =~ /#{switch} 'two words'/}
-        end
+      it "puts the #{switch} arg in the command line" do
+        adapter = described_class.new(builder_with(arg => 'word'))
+        adapter.call {|cmd| cmd.should =~ /#{switch} word/}
       end
+
+      it "handles arguments that need to be escaped" do
+        adapter = described_class.new(builder_with(arg => 'two words'))
+        adapter.call {|cmd| cmd.should =~ /#{switch} 'two words'/}
+      end
+    end
+
+    shared_examples_for "it treats #{arg} as optional" do
+      it "omits #{switch} when you don't give it #{arg}" do
+        adapter = described_class.new(builder_without(arg))
+        adapter.call {|cmd| cmd.should_not include(switch)}
+      end
+    end
+
+  end
+
+  shared_examples_for "it treats config as optional" do
+    it "omits --config when you don't give it config" do
+      adapter = described_class.new(builder_without(:config))
+      adapter.call {|cmd| cmd.should_not include('--config')}
     end
   end
 
