@@ -20,7 +20,7 @@ module EY
         def array_argument(switch, values)
           compacted = values.compact.sort
           if compacted.any?
-            @arguments << [switch, values]
+            @arguments << [switch, compacted]
           end
         end
 
