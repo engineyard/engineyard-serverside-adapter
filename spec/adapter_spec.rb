@@ -13,7 +13,7 @@ shared_examples_for "a serverside action" do
     end
   end
 
-  it "gives you an arg builder already set up from when you instantiated the adapter" do
+  it "gives you an Arguments already set up from when you instantiated the adapter" do
     command = @adapter.send(@method) do |args|
       args.app.should == 'app-from-adapter-new'
     end
@@ -30,7 +30,7 @@ shared_examples_for "a serverside action" do
     end
   end
 
-  it "does not let arg-builder changes propagate back up to the adapter" do
+  it "does not let arguments changes propagate back up to the adapter" do
     command1 = @adapter.send(@method) do |args|
       args.app = 'sporkr'
     end
@@ -43,7 +43,7 @@ end
 
 describe EY::Serverside::Adapter do
   context ".new" do
-    it "lets you access the arg builder" do
+    it "lets you access the arguments" do
       adapter = described_class.new do |args|
         args.app = 'myapp'
       end

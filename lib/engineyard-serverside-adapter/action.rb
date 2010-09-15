@@ -1,15 +1,17 @@
 require 'escape'
+require 'pathname'
 
 module EY
   module Serverside
     class Adapter
       class Action
 
-        def initialize(builder = nil, &block)
-          builder ||= Builder.new
-          block.call builder if block
+        def initialize(options = {}, &block)
+          @gem_bin_pathname = Pathname.new(options[:gem_bin_pathname] || "")
+          arguments = options[:arguments] || Arguments.new
+          block.call arguments if block
 
-          extract_state_from_builder(builder)
+          extract_state_from_arguments(arguments)
           validate!
         end
 
@@ -33,14 +35,14 @@ module EY
 
       private
 
-        def extract_state_from_builder(builder)
+        def extract_state_from_arguments(arguments)
           @state = self.class.options.inject({}) do |acc, (option_name, option_attrs)|
-            acc.merge(option_name => builder.send(option_name))
+            acc.merge(option_name => arguments.send(option_name))
           end
         end
 
         def command
-          cmd = Command.new(*task)
+          cmd = Command.new(@gem_bin_pathname, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]
             switch = "--" + option_name.to_s.gsub(/_/, '-')

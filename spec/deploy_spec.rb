@@ -22,15 +22,15 @@ describe EY::Serverside::Adapter::Deploy do
 
   context "with valid arguments" do
     let(:command) do
-      adapter = described_class.new do |builder|
-        builder.app = "rackapp"
-        builder.framework_env = 'production'
-        builder.config = {'a' => 1}
-        builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        builder.migrate = 'rake db:migrate'
-        builder.ref = 'master'
-        builder.repo = 'git@github.com:engineyard/engineyard-serverside.git'
-        builder.stack = "nginx_unicorn"
+      adapter = described_class.new do |arguments|
+        arguments.app = "rackapp"
+        arguments.framework_env = 'production'
+        arguments.config = {'a' => 1}
+        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.migrate = 'rake db:migrate'
+        arguments.ref = 'master'
+        arguments.repo = 'git@github.com:engineyard/engineyard-serverside.git'
+        arguments.stack = "nginx_unicorn"
       end
       adapter.call {|cmd| cmd}
     end

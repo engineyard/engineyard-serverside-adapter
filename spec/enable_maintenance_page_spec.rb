@@ -11,9 +11,9 @@ describe EY::Serverside::Adapter::EnableMaintenancePage do
   context "with valid arguments" do
 
     let(:command) do
-      adapter = described_class.new do |builder|
-        builder.app = "rackapp"
-        builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+      adapter = described_class.new do |arguments|
+        arguments.app = "rackapp"
+        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
       end
       adapter.call {|cmd| cmd}
     end

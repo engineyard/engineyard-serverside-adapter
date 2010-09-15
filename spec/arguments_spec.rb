@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EY::Serverside::Adapter::Builder do
+describe EY::Serverside::Adapter::Arguments do
   def raises_argument_error(&block)
     lambda {
       block.call(described_class.new)
@@ -8,20 +8,20 @@ describe EY::Serverside::Adapter::Builder do
   end
 
   it "raises an ArgumentError immediately when instances is empty" do
-    raises_argument_error do |builder|
-      builder.instances = []
+    raises_argument_error do |arguments|
+      arguments.instances = []
     end
   end
 
   it "raises an ArgumentError immediately when instances is something totally silly" do
-    raises_argument_error do |builder|
-      builder.instances = 42
+    raises_argument_error do |arguments|
+      arguments.instances = 42
     end
   end
 
   it "raises an ArgumentError immediately when instances contains something totally silly" do
-    raises_argument_error do |builder|
-      builder.instances = [nil]
+    raises_argument_error do |arguments|
+      arguments.instances = [nil]
     end
   end
 

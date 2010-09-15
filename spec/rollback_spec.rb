@@ -12,11 +12,11 @@ describe EY::Serverside::Adapter::Rollback do
 
   context "with valid arguments" do
     let(:command) do
-      adapter = described_class.new do |builder|
-        builder.app = "rackapp"
-        builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        builder.stack = "nginx_unicorn"
-        builder.config = {'a' => 1}
+      adapter = described_class.new do |arguments|
+        arguments.app = "rackapp"
+        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.stack = "nginx_unicorn"
+        arguments.config = {'a' => 1}
       end
       adapter.call {|cmd| cmd}
     end
