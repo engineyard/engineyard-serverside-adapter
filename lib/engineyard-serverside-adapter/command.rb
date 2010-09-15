@@ -5,6 +5,8 @@ module EY
   module Serverside
     module Adapter
       class Command
+        ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
+
         def initialize(*task)
           @task = task
           @arguments = []
@@ -13,7 +15,7 @@ module EY
         def to_s
           Escape.shell_command [
             'engineyard-serverside',
-            "_#{VERSION}_",
+            "_#{ENGINEYARD_SERVERSIDE_VERSION}_",
           ] + @task + @arguments.sort_by { |x| x.first }.flatten
         end
 
