@@ -1,6 +1,6 @@
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class Rollback < Action
 
         option :app,       :string,    :required => true

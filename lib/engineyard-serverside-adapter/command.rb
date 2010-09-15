@@ -3,7 +3,7 @@ require 'json'
 
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class Command
         ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
 

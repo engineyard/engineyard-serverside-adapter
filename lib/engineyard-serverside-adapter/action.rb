@@ -2,15 +2,12 @@ require 'escape'
 
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class Action
 
         def initialize(builder = nil, &block)
-          builder ||= begin
-                        b = Builder.new
-                        block.call b
-                        b
-                      end
+          builder ||= Builder.new
+          block.call builder if block
 
           extract_state_from_builder(builder)
           validate!
@@ -18,6 +15,10 @@ module EY
 
         def call(&block)
           block.call command.to_s
+        end
+
+        def verbose
+          @state[:verbose]
         end
 
         class << self

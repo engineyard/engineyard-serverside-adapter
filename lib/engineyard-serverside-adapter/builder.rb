@@ -1,6 +1,6 @@
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class Builder < Struct.new(:app, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose)
 
         def app=(app)

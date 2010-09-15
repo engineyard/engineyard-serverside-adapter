@@ -1,6 +1,6 @@
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class EnableMaintenancePage < Action
 
         option :app,       :string,    :required => true

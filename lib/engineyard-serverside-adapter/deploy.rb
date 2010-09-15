@@ -1,6 +1,6 @@
 module EY
   module Serverside
-    module Adapter
+    class Adapter
       class Deploy < Action
 
         option :app,           :string,    :required => true
