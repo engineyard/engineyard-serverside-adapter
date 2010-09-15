@@ -83,47 +83,8 @@ describe EY::Serverside::Adapter::Rollback do
   end
 
   context "with missing arguments" do
-    def raises_argument_error(&block)
-      lambda {
-        described_class.new(&block)
-      }.should raise_error(ArgumentError)
-    end
-
     it_should_require :app
     it_should_require :stack
     it_should_require :instances
-
-    it "raises an ArgumentError immediately when stack is blank" do
-      raises_argument_error do |builder|
-        builder.app = 'random-string'
-        builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        builder.stack = ''
-      end
-    end
-
-    it "raises an ArgumentError immediately when instances is empty" do
-      raises_argument_error do |builder|
-        builder.app = "rackapp"
-        builder.instances = []
-        builder.stack = 'nginx_unicorn'
-      end
-    end
-
-    it "raises an ArgumentError immediately when instances is something totally silly" do
-      raises_argument_error do |builder|
-        builder.app = "rackapp"
-        builder.instances = 42
-        builder.stack = 'nginx_unicorn'
-      end
-    end
-
-    it "raises an ArgumentError immediately when instances contains something totally silly" do
-      raises_argument_error do |builder|
-        builder.app = "rackapp"
-        builder.instances = [nil]
-        builder.stack = 'nginx_unicorn'
-      end
-    end
-
   end
 end
