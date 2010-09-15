@@ -4,18 +4,12 @@ module EY
       class Builder < Struct.new(:app, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose)
 
         def app=(app)
-          if app.to_s.empty?
-            raise ArgumentError, "Value for 'app' must be non-empty."
-          end
-
+          enforce_nonempty!('app', app)
           super
         end
 
         def framework_env=(framework_env)
-          if framework_env.to_s.empty?
-            raise ArgumentError, "Value for 'framework_env' must be non-empty."
-          end
-
+          enforce_nonempty!('framework_env', framework_env)
           super
         end
 
@@ -38,31 +32,30 @@ module EY
         end
 
         def ref=(ref)
-          if ref.to_s.empty?
-            raise ArgumentError, "Value for 'ref' must be non-empty."
-          end
-
+          enforce_nonempty!('ref', ref)
           super
         end
 
         def repo=(repo)
-          if repo.to_s.empty?
-            raise ArgumentError, "Value for 'repo' must be non-empty."
-          end
-
+          enforce_nonempty!('repo', repo)
           super
         end
 
         def stack=(stack)
-          if stack.to_s.empty?
-            raise ArgumentError, "Value for 'stack' must be non-empty."
-          end
-
+          enforce_nonempty!('stack', stack)
           super
+        end
+
+        private
+
+        def enforce_nonempty!(name, value)
+          if value.to_s.empty?
+            raise ArgumentError, "Value for '#{name}' must be non-empty."
+          end
         end
 
       end
     end
   end
 end
-  
+
