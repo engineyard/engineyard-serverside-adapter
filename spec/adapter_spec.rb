@@ -38,6 +38,40 @@ shared_examples_for "a serverside action" do
       args.app.should == 'app-from-adapter-new'
     end
   end
+
+  context "with no pathname specified" do
+    it "begins both commands with no path" do
+      action = @adapter.send(@method) do |args|
+        args.verbose = true
+      end
+
+      commands = all_commands(action)
+      commands.first.should =~ /^\(gem/
+      commands.last.should =~ /^engineyard-serverside/
+    end
+  end
+
+  context "with a pathname specified" do
+    it "begins both commands with the given path" do
+      adapter = described_class.new("/usr/local/grin") do |args|
+        args.app           = 'app-from-adapter-new'
+        args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
+        args.framework_env = 'production'
+        args.ref           = 'master'
+        args.repo          = 'git@github.com:engineyard/engineyard-serverside.git'
+        args.stack         = 'nginx_unicorn'
+        args
+      end
+
+      action = adapter.send(@method) do |args|
+        args.verbose = true
+      end
+
+      commands = all_commands(action)
+      commands.first.should =~ %r{^\(/usr/local/grin/gem}
+      commands.last.should =~ %r{^/usr/local/grin/engineyard-serverside}
+    end
+  end
 end
 
 describe EY::Serverside::Adapter do

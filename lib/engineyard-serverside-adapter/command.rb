@@ -8,7 +8,7 @@ module EY
         def initialize(bin_path, *task)
           @task = task
           @arguments = []
-          @binary = bin_path.join(ENGINEYARD_SERVERSIDE_BINARY).to_s
+          @binary = bin_path.join('engineyard-serverside').to_s
         end
         
         def to_s

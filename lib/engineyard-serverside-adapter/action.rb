@@ -7,7 +7,7 @@ module EY
       class Action
 
         def initialize(options = {}, &block)
-          @gem_bin_pathname = Pathname.new(options[:gem_bin_pathname] || "")
+          @gem_bin_path = Pathname.new(options[:gem_bin_path] || "")
           arguments = options[:arguments] || Arguments.new
           block.call arguments if block
 
@@ -67,11 +67,11 @@ module EY
         end
 
         def gem_path
-          @gem_bin_pathname.join('gem').to_s
+          @gem_bin_path.join('gem').to_s
         end
 
         def action_command
-          cmd = Command.new(@gem_bin_pathname, *task)
+          cmd = Command.new(@gem_bin_path, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]
             switch = "--" + option_name.to_s.gsub(/_/, '-')

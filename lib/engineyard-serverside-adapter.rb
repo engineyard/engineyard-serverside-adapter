@@ -14,33 +14,38 @@ module EY
       autoload :VERSION,                'engineyard-serverside-adapter/version'
 
       ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
-      ENGINEYARD_SERVERSIDE_BINARY  = 'engineyard-serverside'
 
       def initialize(gem_bin_path = "")
-        @gem_bin_pathname = Pathname.new(gem_bin_path)
-        @arguments        = Arguments.new
+        @gem_bin_path = Pathname.new(gem_bin_path)
+        @arguments    = Arguments.new
 
         yield @arguments if block_given?
       end
 
       def deploy(&b)
-        command = Deploy.new(:arguments => @arguments.dup, :gem_bin_pathname => @gem_bin_pathname, &b)
+        Deploy.new(new_action_args, &b)
       end
 
       def disable_maintenance_page(&b)
-        command = DisableMaintenancePage.new(:arguments => @arguments.dup, :gem_bin_pathname => @gem_bin_pathname, &b)
+        DisableMaintenancePage.new(new_action_args, &b)
       end
 
       def enable_maintenance_page(&b)
-        command = EnableMaintenancePage.new(:arguments => @arguments.dup, :gem_bin_pathname => @gem_bin_pathname, &b)
+        EnableMaintenancePage.new(new_action_args, &b)
       end
 
       def integrate(&b)
-        command = Integrate.new(:arguments => @arguments.dup, :gem_bin_pathname => @gem_bin_pathname, &b)
+        Integrate.new(new_action_args, &b)
       end
 
       def rollback(&b)
-        command = Rollback.new(:arguments => @arguments.dup, :gem_bin_pathname => @gem_bin_pathname, &b)
+        Rollback.new(new_action_args, &b)
+      end
+
+      private
+
+      def new_action_args
+        {:arguments => @arguments.dup, :gem_bin_path => @gem_bin_path}
       end
 
     end
