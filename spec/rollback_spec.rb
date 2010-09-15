@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe EY::Serverside::Adapter::Rollback do
+  it_should_behave_like "it accepts verbose"
+
   context "with valid arguments" do
 
     let(:command) do
@@ -45,40 +47,6 @@ describe EY::Serverside::Adapter::Rollback do
 
     it "invokes exactly the right command" do
       command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy rollback --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie --stack nginx_unicorn"
-    end
-  end
-
-  context "the --verbose arg" do
-    it "is present when you set verbose to true" do
-      adapter = described_class.new do |builder|
-        builder.app = 'myapp'
-        builder.instances = [{:hostname => 'dontcare', :roles => []}]
-        builder.stack = 'nginx_unicorn'
-        builder.verbose = true
-      end
-
-      adapter.call {|cmd| cmd.should =~ /--verbose/}
-    end
-
-    it "is absent when you set verbose to false" do
-      adapter = described_class.new do |builder|
-        builder.app = 'myapp'
-        builder.instances = [{:hostname => 'dontcare', :roles => []}]
-        builder.stack = 'nginx_unicorn'
-        builder.verbose = false
-      end
-
-      adapter.call {|cmd| cmd.should_not =~ /--verbose/}
-    end
-
-    it "is absent when you omit verbose" do
-      adapter = described_class.new do |builder|
-        builder.app = 'myapp'
-        builder.instances = [{:hostname => 'dontcare', :roles => []}]
-        builder.stack = 'nginx_unicorn'
-      end
-
-      adapter.call {|cmd| cmd.should_not =~ /--verbose/}
     end
   end
 
