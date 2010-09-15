@@ -20,14 +20,13 @@ shared_examples_for "a serverside action" do
   end
 
   it "applies both sets of changes" do
-    command = @adapter.send(@method) do |args|
+    action = @adapter.send(@method) do |args|
       args.verbose = true
     end
 
-    command.call do |cmd|
-      cmd.should include('--app app-from-adapter-new')
-      cmd.should include('--verbose')
-    end
+    command = last_command(action)
+    command.should include('--app app-from-adapter-new')
+    command.should include('--verbose')
   end
 
   it "does not let arguments changes propagate back up to the adapter" do

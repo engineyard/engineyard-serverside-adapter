@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe EY::Serverside::Adapter::Deploy do
+  it_should_behave_like "it installs engineyard-serverside"
+
   it_should_behave_like "it accepts app"
   it_should_behave_like "it accepts framework_env"
   it_should_behave_like "it accepts instances"
@@ -32,7 +34,7 @@ describe EY::Serverside::Adapter::Deploy do
         arguments.repo = 'git@github.com:engineyard/engineyard-serverside.git'
         arguments.stack = "nginx_unicorn"
       end
-      adapter.call {|cmd| cmd}
+      last_command(adapter)
     end
 
     it "puts the config in the command line as json" do

@@ -16,7 +16,8 @@ module EY
         end
 
         def call(&block)
-          block.call command.to_s
+          block.call check_and_install_command.to_s
+          block.call action_command.to_s
         end
 
         def verbose
@@ -32,7 +33,6 @@ module EY
           end
         end
 
-
       private
 
         def extract_state_from_arguments(arguments)
@@ -41,7 +41,36 @@ module EY
           end
         end
 
-        def command
+        def check_and_install_command
+          "(#{check_command}) || (#{install_command})"
+        end
+
+        def check_command
+          escaped_engineyard_serverside_version = ENGINEYARD_SERVERSIDE_VERSION.gsub(/\./, '\.')
+
+          [
+            Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
+            Escape.shell_command(["grep", "engineyard-serverside "]),
+            Escape.shell_command(["egrep", "-q", "#{escaped_engineyard_serverside_version}[,)]"]),
+          ].join(" | ")
+        end
+
+        def install_command
+          # rubygems looks at *.gem in its current directory for
+          # installation candidates, so we have to make sure it
+          # runs from a directory with no gem files in it.
+          #
+          # rubygems help suggests that --remote will disable this
+          # behavior, but it doesn't.
+          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{ENGINEYARD_SERVERSIDE_VERSION}"
+          Escape.shell_command(['sudo', 'sh', '-c', install_command])
+        end
+
+        def gem_path
+          @gem_bin_pathname.join('gem').to_s
+        end
+
+        def action_command
           cmd = Command.new(@gem_bin_pathname, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]

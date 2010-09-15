@@ -11,10 +11,15 @@ module EY
       autoload :EnableMaintenancePage,  'engineyard-serverside-adapter/enable_maintenance_page'
       autoload :Integrate,              'engineyard-serverside-adapter/integrate'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
+      autoload :VERSION,                'engineyard-serverside-adapter/version'
+
+      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
+      ENGINEYARD_SERVERSIDE_BINARY  = 'engineyard-serverside'
 
       def initialize(gem_bin_path = "")
         @gem_bin_pathname = Pathname.new(gem_bin_path)
-        @arguments = Arguments.new
+        @arguments        = Arguments.new
+
         yield @arguments if block_given?
       end
 

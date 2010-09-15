@@ -5,13 +5,10 @@ module EY
   module Serverside
     class Adapter
       class Command
-        ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
-        ENGINEYARD_SERVERSIDE_BIN = 'engineyard-serverside'
-
         def initialize(bin_path, *task)
           @task = task
           @arguments = []
-          @binary = bin_path.join(ENGINEYARD_SERVERSIDE_BIN).to_s
+          @binary = bin_path.join(ENGINEYARD_SERVERSIDE_BINARY).to_s
         end
         
         def to_s

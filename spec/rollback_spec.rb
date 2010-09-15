@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe EY::Serverside::Adapter::Rollback do
+  it_should_behave_like "it installs engineyard-serverside"
+
   it_should_behave_like "it accepts app"
   it_should_behave_like "it accepts instances"
   it_should_behave_like "it accepts stack"
@@ -18,7 +20,7 @@ describe EY::Serverside::Adapter::Rollback do
         arguments.stack = "nginx_unicorn"
         arguments.config = {'a' => 1}
       end
-      adapter.call {|cmd| cmd}
+      last_command(adapter)
     end
 
     it "puts the config in the command line as json" do

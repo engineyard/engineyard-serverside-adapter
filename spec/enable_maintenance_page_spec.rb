@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe EY::Serverside::Adapter::EnableMaintenancePage do
+  it_should_behave_like "it installs engineyard-serverside"
+
   it_should_behave_like "it accepts app"
   it_should_behave_like "it accepts instances"
   it_should_behave_like "it accepts verbose"
@@ -15,7 +17,7 @@ describe EY::Serverside::Adapter::EnableMaintenancePage do
         arguments.app = "rackapp"
         arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
       end
-      adapter.call {|cmd| cmd}
+      last_command(adapter)
     end
 
     it "invokes exactly the right command" do
