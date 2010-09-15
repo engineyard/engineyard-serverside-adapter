@@ -1,7 +1,7 @@
 module EY
   module Serverside
     module Adapter
-      class Builder < Struct.new(:app, :instances, :stack, :verbose)
+      class Builder < Struct.new(:app, :framework_env, :instances, :stack, :verbose, :config)
 
         def app=(app)
           if app.to_s.empty?

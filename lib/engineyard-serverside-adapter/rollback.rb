@@ -12,12 +12,14 @@ module EY
 
         def extract_state_from_builder(builder)
           super
-          @stack = builder.stack
+          @stack  = builder.stack
+          @config = builder.config
         end
 
         def command
           cmd = super
-          cmd.string_argument '--stack', @stack
+          cmd.string_argument '--stack',  @stack
+          cmd.json_argument   '--config', @config
           cmd
         end
 

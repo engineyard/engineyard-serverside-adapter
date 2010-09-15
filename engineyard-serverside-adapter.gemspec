@@ -14,9 +14,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "engineyard-serverside-adapter"
 
-  s.add_dependency             "escape",  "~> 0.0.4"
-  s.add_development_dependency "bundler", ">= 1.0.0"
-  s.add_development_dependency "rspec",   "~> 1.3.0"
+  s.add_dependency             "escape",     "~> 0.0.4"
+  s.add_dependency             "json_pure",  "~> 1.4.6"
+  s.add_development_dependency "bundler",    ">= 1.0.0"
+  s.add_development_dependency "rspec",      "~> 1.3.0"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact

@@ -10,6 +10,7 @@ describe EY::Serverside::Adapter::Rollback do
         builder.app = "rackapp"
         builder.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
         builder.stack = "nginx_unicorn"
+        builder.config = {'a' => 1}
       end
       adapter.call {|cmd| cmd}
     end
@@ -26,6 +27,10 @@ describe EY::Serverside::Adapter::Rollback do
       command.should =~ /--instances localhost/
       command.should =~ /--instance-roles localhost:han,solo/
       command.should =~ /--instance-names localhost:chewie/
+    end
+
+    it "puts the config in the command line as json" do
+      command.should =~ /--config '#{Regexp.quote '{"a":1}'}'/
     end
 
     it "puts the stack in the command line" do
@@ -46,7 +51,7 @@ describe EY::Serverside::Adapter::Rollback do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy rollback --app rackapp --instances localhost --instance-roles localhost:han,solo --instance-names localhost:chewie --stack nginx_unicorn"
+      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy rollback --app rackapp --config '{\"a\":1}' --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --stack nginx_unicorn"
     end
   end
 

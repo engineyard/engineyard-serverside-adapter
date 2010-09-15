@@ -7,9 +7,10 @@ require 'pp'
 module BuilderHelpers
   def valid_options
     {
-      :app => 'rackapp',
-      :stack => 'nginx_unicorn',
-      :instances => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+      :app           => 'rackapp',
+      :framework_env => 'production',
+      :instances     => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
+      :stack         => 'nginx_unicorn',
     }
   end
 

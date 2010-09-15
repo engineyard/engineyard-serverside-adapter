@@ -1,4 +1,5 @@
 require 'escape'
+require 'json'
 
 module EY
   module Serverside
@@ -13,33 +14,29 @@ module EY
           Escape.shell_command [
             'engineyard-serverside',
             "_#{VERSION}_",
-          ] + @task + @arguments
+          ] + @task + @arguments.sort_by { |x| x.first }.flatten
         end
 
         def array_argument(switch, values)
           compacted = values.compact.sort
           if compacted.any?
-            @arguments << switch
-            @arguments += values
+            @arguments << [switch, values]
           end
         end
 
         def boolean_argument(switch, value)
           if value
-            @arguments << switch
+            @arguments << [switch]
           end
         end
 
         def hash_argument(switch, pairs)
           if pairs.any? {|k,v| !v.nil?}
-            @arguments << switch
-            @arguments += pairs.reject { |k,v| v.nil? }.map { |pair| pair.join(':') }.sort
+            @arguments << [switch, pairs.reject { |k,v| v.nil? }.map { |pair| pair.join(':') }.sort]
           end
         end
 
         def instances_argument(instances)
-          array_argument('--instances', instances.map{|i| i[:hostname]})
-
           role_pairs = instances.inject({}) do |roles, instance|
             roles.merge(instance[:hostname] => instance[:roles].join(','))
           end
@@ -49,10 +46,16 @@ module EY
             roles.merge(instance[:hostname] => instance[:name])
           end
           hash_argument('--instance-names', role_pairs)
+
+          array_argument('--instances', instances.map{|i| i[:hostname]})
+        end
+
+        def json_argument(switch, value)
+          string_argument(switch, value.to_json)
         end
 
         def string_argument(switch, value)
-          @arguments << switch << value
+          @arguments << [switch, value]
         end
 
       end
