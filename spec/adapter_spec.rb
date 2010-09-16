@@ -92,6 +92,7 @@ describe EY::Serverside::Adapter do
     :disable_maintenance_page,
     :enable_maintenance_page,
     :integrate,
+    :restart,
     :rollback,
   ].each do |method|
     context "##{method}" do

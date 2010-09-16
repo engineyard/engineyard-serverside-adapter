@@ -10,6 +10,7 @@ module EY
       autoload :DisableMaintenancePage, 'engineyard-serverside-adapter/disable_maintenance_page'
       autoload :EnableMaintenancePage,  'engineyard-serverside-adapter/enable_maintenance_page'
       autoload :Integrate,              'engineyard-serverside-adapter/integrate'
+      autoload :Restart,                'engineyard-serverside-adapter/restart'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
       autoload :VERSION,                'engineyard-serverside-adapter/version'
 
@@ -36,6 +37,10 @@ module EY
 
       def integrate(&b)
         Integrate.new(new_action_args, &b)
+      end
+
+      def restart(&b)
+        Restart.new(new_action_args, &b)
       end
 
       def rollback(&b)
