@@ -79,7 +79,7 @@ Spec::Runner.configure do |config|
 
       installation_command.should =~ /gem list engineyard-serverside/
       installation_command.should =~ /egrep -q /
-      installation_command.should =~ /gem install engineyard-serverside.*-v #{Regexp.quote EY::Serverside::Adapter::VERSION}/
+      installation_command.should =~ /gem install engineyard-serverside.*-v #{Regexp.quote EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}/
     end
   end
 

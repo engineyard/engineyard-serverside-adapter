@@ -42,7 +42,7 @@ describe EY::Serverside::Adapter::Deploy do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --migrate 'rake db:migrate' --ref master --repo git@github.com:engineyard/engineyard-serverside.git --stack nginx_unicorn"
+      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_ deploy --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --migrate 'rake db:migrate' --ref master --repo git@github.com:engineyard/engineyard-serverside.git --stack nginx_unicorn"
     end
   end
 end

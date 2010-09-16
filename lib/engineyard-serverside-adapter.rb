@@ -14,7 +14,10 @@ module EY
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
       autoload :VERSION,                'engineyard-serverside-adapter/version'
 
-      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
+      # engineyard-serverside uses major.minor.patch; using a
+      # potentially-4-digit version lets us release fixes in the
+      # adapter while still keeping in version sync
+      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION.split('.')[0..2].join('.')
 
       def initialize(gem_bin_path = "")
         @gem_bin_path = Pathname.new(gem_bin_path)

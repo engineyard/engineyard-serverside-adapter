@@ -31,7 +31,7 @@ describe EY::Serverside::Adapter::Rollback do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy rollback --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --stack nginx_unicorn"
+      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_ deploy rollback --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --stack nginx_unicorn"
     end
   end
 end

@@ -21,7 +21,7 @@ describe EY::Serverside::Adapter::EnableMaintenancePage do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::VERSION}_ deploy enable_maintenance_page --app rackapp --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost"
+      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_ deploy enable_maintenance_page --app rackapp --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost"
     end
   end
 
