@@ -11,6 +11,12 @@ task :release do
     system("git commit -am 'Bump to engineyard-serverside version #{new_version}'") &&
     system("git tag v#{new_version}") &&
     system("gem build engineyard-serverside-adapter.gemspec"))
+
+  puts '********************************************************************************'
+  puts
+  puts "Don't forget to `gem push` and `git push --tags`!"
+  puts
+  puts '********************************************************************************'
 end
 
 def bump_to_latest_serverside
