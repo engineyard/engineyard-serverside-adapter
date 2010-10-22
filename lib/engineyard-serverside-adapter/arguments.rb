@@ -24,7 +24,7 @@ module EY
 
           instances.each do |instance|
             unless instance.respond_to?(:[]) && instance[:hostname] && instance[:roles]
-              raise ArgumentError, "Malformed instance #{instance}; it must have both [:hostname] and [:roles]"
+              raise ArgumentError, "Malformed instance #{instance.inspect}; it must have both [:hostname] and [:roles]"
             end
           end
 
