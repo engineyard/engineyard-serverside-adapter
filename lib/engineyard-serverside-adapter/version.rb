@@ -1,7 +1,7 @@
   module EY
     module Serverside
       class Adapter
-        VERSION = "1.3.7"
+        VERSION = "1.4.0.pre"
       end
     end
   end
