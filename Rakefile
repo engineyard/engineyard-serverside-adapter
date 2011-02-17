@@ -20,26 +20,23 @@ task :release do
 end
 
 def bump_to_latest_serverside
+  specs = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new("engineyard-serverside"))
+  versions = specs.map {|spec,| spec.version}.sort
+  new_version = versions.last.to_s
+
   serverside_version_file =<<-EOT
   module EY
     module Serverside
       class Adapter
-        VERSION = "_VERSION_GOES_HERE_"
+        VERSION = "#{new_version}"
       end
     end
   end
   EOT
 
-  new_version = `gem search -r engineyard-serverside`.
-    grep(/^engineyard-serverside /).
-    first.
-    match(/\((.*?)\)/).
-    captures.
-    first
-
   puts "Using engineyard-serverside version #{new_version}"
   File.open('lib/engineyard-serverside-adapter/version.rb', 'w') do |f|
-    f.write serverside_version_file.gsub(/_VERSION_GOES_HERE_/, new_version)
+    f.write serverside_version_file
   end
   new_version
 end
