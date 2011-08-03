@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.name        = "engineyard-serverside-adapter"
   s.version     = EY::Serverside::Adapter::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = []
-  s.email       = []
+  s.authors     = ['Martin Emde', 'Sam Merritt']
+  s.email       = ['memde@engineyard.com', 'smerritt@engineyard.com>']
   s.homepage    = "http://github.com/engineyard/engineyard-serverside-adapter"
   s.summary     = "Adapter for speaking to engineyard-serverside"
   s.description = "A separate adapter for speaking the CLI language of the engineyard-serverside gem."
