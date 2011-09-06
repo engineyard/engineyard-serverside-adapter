@@ -5,6 +5,7 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
 end
 task :default => :spec
 
+desc "Release engineyard-serverside-adapter gem"
 task :release do
   new_version = bump_to_latest_serverside
   (system("git add lib/engineyard-serverside-adapter/version.rb") &&
