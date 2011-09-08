@@ -18,7 +18,7 @@ module EY
       # potentially-4-digit version lets us release fixes in the
       # adapter while still keeping in version sync
       #ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION.split('.')[0..2].join('.')
-      ENGINEYARD_SERVERSIDE_VERSION = '1.4.3.nodestack'
+      ENGINEYARD_SERVERSIDE_VERSION = '1.4.8.nodestack'
 
       def initialize(gem_bin_path = "")
         @gem_bin_path = Pathname.new(gem_bin_path)
