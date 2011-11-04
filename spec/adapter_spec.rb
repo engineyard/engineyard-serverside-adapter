@@ -4,6 +4,7 @@ shared_examples_for "a serverside action" do
   before(:each) do
     @adapter = described_class.new do |args|
       args.app           = 'app-from-adapter-new'
+      args.deploy_user   = 'testuser'
       args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
       args.framework_env = 'production'
       args.ref           = 'master'
@@ -55,6 +56,7 @@ shared_examples_for "a serverside action" do
     it "begins both commands with the given path" do
       adapter = described_class.new("/usr/local/grin") do |args|
         args.app           = 'app-from-adapter-new'
+        args.deploy_user   = 'testuser'
         args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
         args.framework_env = 'production'
         args.ref           = 'master'
@@ -105,6 +107,7 @@ describe EY::Serverside::Adapter do
     before(:each) do
       @adapter = described_class.new do |args|
         args.app           = 'app-from-adapter-new'
+        args.deploy_user   = 'testuser'
         args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
         args.framework_env = 'production'
         args.ref           = 'master'
