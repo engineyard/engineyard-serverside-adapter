@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency             "escape",     "~> 0.0.4"
   s.add_dependency             "json_pure"
-  s.add_development_dependency "bundler",    ">= 1.0.0"
   s.add_development_dependency "rspec",      "~> 1.3.0"
   s.add_development_dependency "rake"
 

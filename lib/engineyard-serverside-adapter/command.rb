@@ -10,7 +10,7 @@ module EY
           @arguments = []
           @binary = bin_path.join('engineyard-serverside').to_s
         end
-        
+
         def to_s
           Escape.shell_command [@binary, "_#{ENGINEYARD_SERVERSIDE_VERSION}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
         end
