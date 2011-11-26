@@ -12,11 +12,14 @@ task :release do
     system("git tag v#{new_version}") &&
     system("gem build engineyard-serverside-adapter.gemspec"))
 
-  puts '********************************************************************************'
-  puts
-  puts "Don't forget to `gem push` and `git push --tags`!"
-  puts
-  puts '********************************************************************************'
+  puts <<-PUSHGEM
+## To publish the gem: #########################################################
+
+    gem push engineyard-serverside-adapter-#{new_version}.gem
+    git push origin master v#{new_version}
+
+## No public changes yet. ######################################################
+  PUSHGEM
 end
 
 def bump_to_latest_serverside
@@ -25,13 +28,13 @@ def bump_to_latest_serverside
   new_version = versions.last.to_s
 
   serverside_version_file =<<-EOT
-  module EY
-    module Serverside
-      class Adapter
-        VERSION = "#{new_version}"
-      end
+module EY
+  module Serverside
+    class Adapter
+      VERSION = "#{new_version}"
     end
   end
+end
   EOT
 
   puts "Using engineyard-serverside version #{new_version}"
