@@ -8,6 +8,7 @@ module ArgumentsHelpers
   def valid_options
     {
       :app           => 'rackapp',
+      :deploy_user   => 'testuser',
       :framework_env => 'production',
       :instances     => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
       :ref           => 'master',
@@ -109,6 +110,7 @@ RSpec.configure do |config|
     :ref           => '--ref',
     :repo          => '--repo',
     :migrate       => '--migrate',
+    :deploy_user   => '--deploy-user',
   }.each do |arg, switch|
     shared_examples_for "it accepts #{arg}" do
       it "puts the #{switch} arg in the command line" do
