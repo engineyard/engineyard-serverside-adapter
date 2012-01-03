@@ -19,9 +19,10 @@ module EY
       # adapter while still keeping in version sync
       ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION.split('.')[0..2].join('.')
 
-      def initialize(gem_bin_path = "")
-        @gem_bin_path = Pathname.new(gem_bin_path)
-        @arguments    = Arguments.new
+      def initialize(gem_bin_path = "", serverside_version = ENGINEYARD_SERVERSIDE_VERSION)
+        @gem_bin_path       = Pathname.new(gem_bin_path)
+        @arguments          = Arguments.new
+        @serverside_version = serverside_version
 
         yield @arguments if block_given?
       end
@@ -53,7 +54,7 @@ module EY
       private
 
       def new_action_args
-        {:arguments => @arguments.dup, :gem_bin_path => @gem_bin_path}
+        {:arguments => @arguments.dup, :gem_bin_path => @gem_bin_path, :serverside_version => @serverside_version}
       end
 
     end

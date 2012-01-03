@@ -7,6 +7,7 @@ module EY
       class Action
 
         def initialize(options = {}, &block)
+          @serverside_version = options[:serverside_version] || EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
           @gem_bin_path = Pathname.new(options[:gem_bin_path] || "")
           arguments = options[:arguments] || Arguments.new
           block.call arguments if block
@@ -46,13 +47,7 @@ module EY
         end
 
         def check_command
-          escaped_engineyard_serverside_version = ENGINEYARD_SERVERSIDE_VERSION.gsub(/\./, '\.')
-
-          [
-            Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
-            Escape.shell_command(["grep", "engineyard-serverside "]),
-            Escape.shell_command(["egrep", "-q", "#{escaped_engineyard_serverside_version}[,)]"]),
-          ].join(" | ")
+          Escape.shell_command([gem_path, 'list', '-i', "engineyard-serverside", '-v', @serverside_version])
         end
 
         def install_command
@@ -62,7 +57,7 @@ module EY
           #
           # rubygems help suggests that --remote will disable this
           # behavior, but it doesn't.
-          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{ENGINEYARD_SERVERSIDE_VERSION}"
+          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{@serverside_version}"
           Escape.shell_command(['sudo', 'sh', '-c', install_command])
         end
 
