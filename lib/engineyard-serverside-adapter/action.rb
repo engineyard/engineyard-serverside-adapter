@@ -47,7 +47,7 @@ module EY
         end
 
         def check_command
-          Escape.shell_command([gem_path, 'list', '-i', "engineyard-serverside", '-v', @serverside_version])
+          Escape.shell_command([gem_path, 'list', '-i', "engineyard-serverside", '-v', ">=#{@serverside_version}"])
         end
 
         def install_command
@@ -66,7 +66,7 @@ module EY
         end
 
         def action_command
-          cmd = Command.new(@gem_bin_path, *task)
+          cmd = Command.new(@gem_bin_path, @serverside_version, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]
             switch = "--" + option_name.to_s.gsub(/_/, '-')

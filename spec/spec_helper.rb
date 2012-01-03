@@ -73,7 +73,7 @@ RSpec.configure do |config|
       # of course, the only way to be sure is to actually run it, but
       # this gives us regression-proofing
       version = EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
-      installation_command.should == "(gem list -i engineyard-serverside -v #{version}) || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
+      installation_command.should == "(gem list -i engineyard-serverside -v '>=#{version}') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
     end
   end
 
