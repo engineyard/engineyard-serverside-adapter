@@ -42,7 +42,26 @@ describe EY::Serverside::Adapter::Deploy do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_ deploy --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --migrate 'rake db:migrate' --ref master --repo git@github.com:engineyard/engineyard-serverside.git --stack nginx_unicorn"
+      command.should == "engineyard-serverside deploy --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --migrate 'rake db:migrate' --ref master --repo git@github.com:engineyard/engineyard-serverside.git --stack nginx_unicorn"
+    end
+  end
+
+  context "with a serverside version given" do
+    let(:command) do
+      adapter = described_class.new(:serverside_version => '100.100.100') do |arguments|
+        arguments.app = "rackapp"
+        arguments.framework_env = 'production'
+        arguments.config = {'a' => 1}
+        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.migrate = 'rake db:migrate'
+        arguments.ref = 'master'
+        arguments.repo = 'git@github.com:engineyard/engineyard-serverside.git'
+        arguments.stack = "nginx_unicorn"
+      end
+      last_command(adapter)
+    end
+    it "invokes exactly the right command" do
+      command.should == "engineyard-serverside deploy --app rackapp --config '{\"a\":1}' --framework-env production --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --migrate 'rake db:migrate' --ref master --repo git@github.com:engineyard/engineyard-serverside.git --stack nginx_unicorn"
     end
   end
 end

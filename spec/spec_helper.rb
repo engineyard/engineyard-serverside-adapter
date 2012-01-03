@@ -75,6 +75,13 @@ RSpec.configure do |config|
       version = EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
       installation_command.should == "(gem list -i engineyard-serverside -v '>=#{version}') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
     end
+
+    it "checks and install engineyard-serverside with an specified version" do
+      adapter = described_class.new(:arguments => valid_arguments, :serverside_version => '100.100.100')
+      all_commands(adapter).size.should == 2
+      installation_command = all_commands(adapter).first
+      installation_command.should == "(gem list -i engineyard-serverside -v '>=100.100.100') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v 100.100.100')"
+    end
   end
 
   shared_examples_for "it accepts verbose" do

@@ -23,7 +23,7 @@ describe EY::Serverside::Adapter::Restart do
     end
 
     it "invokes exactly the right command" do
-      command.should == "engineyard-serverside _#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_ restart --app rackapp --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --stack nginx_unicorn"
+      command.should == "engineyard-serverside restart --app rackapp --instance-names localhost:chewie --instance-roles localhost:han,solo --instances localhost --stack nginx_unicorn"
     end
   end
 end

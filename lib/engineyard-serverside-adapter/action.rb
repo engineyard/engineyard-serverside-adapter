@@ -66,7 +66,7 @@ module EY
         end
 
         def action_command
-          cmd = Command.new(@gem_bin_path, @serverside_version, *task)
+          cmd = Command.new(@gem_bin_path, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]
             switch = "--" + option_name.to_s.gsub(/_/, '-')
