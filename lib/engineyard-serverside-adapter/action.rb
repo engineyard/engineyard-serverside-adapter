@@ -47,7 +47,13 @@ module EY
         end
 
         def check_command
-          Escape.shell_command([gem_path, 'list', '-i', "engineyard-serverside", '-v', ">=#{@serverside_version}"])
+           escaped_engineyard_serverside_version = @serverside_version.gsub(/\./, '\.')
+
+          [
+            Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
+            Escape.shell_command(["grep", "engineyard-serverside "]),
+            Escape.shell_command(["egrep", "-q", "#{escaped_engineyard_serverside_version}[,)]"]),
+          ].join(" | ")
         end
 
         def install_command
