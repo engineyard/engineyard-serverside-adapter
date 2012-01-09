@@ -12,7 +12,7 @@ module EY
         end
 
         def to_s
-          Escape.shell_command [@binary, "_#{ENGINEYARD_SERVERSIDE_VERSION}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
+          Escape.shell_command [@binary] + @task + @arguments.sort_by { |x| x.first }.flatten
         end
 
         def array_argument(switch, values)

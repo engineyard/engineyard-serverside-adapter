@@ -73,13 +73,15 @@ RSpec.configure do |config|
       # of course, the only way to be sure is to actually run it, but
       # this gives us regression-proofing
       version = EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
-      escaped_version = version.gsub(/\./, '\\.')
-      installation_command.should == "(gem list engineyard-serverside | grep 'engineyard-serverside ' | egrep -q '#{escaped_version}[,)]') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
+      installation_command.should == "(gem list engineyard-serverside | grep 'engineyard-serverside ' | egrep -q '#{version.gsub(/\./, '\.')}[,)]') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
+    end
 
-
-      installation_command.should =~ /gem list engineyard-serverside/
-      installation_command.should =~ /egrep -q /
-      installation_command.should =~ /gem install engineyard-serverside.*-v #{Regexp.quote EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}/
+    it "checks and install engineyard-serverside with an specified version" do
+      version = '100.100.100'
+      adapter = described_class.new(:arguments => valid_arguments, :serverside_version => version)
+      all_commands(adapter).size.should == 2
+      installation_command = all_commands(adapter).first
+      installation_command.should == "(gem list engineyard-serverside | grep 'engineyard-serverside ' | egrep -q '#{version.gsub(/\./, '\.')}[,)]') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v 100.100.100')"
     end
   end
 
