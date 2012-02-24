@@ -21,12 +21,12 @@ describe EY::Serverside::Adapter::Integrate do
   context "with valid arguments" do
     let(:command) do
       adapter = described_class.new do |arguments|
-        arguments.app = "rackapp"
+        arguments.app              = "rackapp"
         arguments.environment_name = "rackapp_production"
-        arguments.account_name = "ey"
-        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        arguments.stack = "nginx_unicorn"
-        arguments.framework_env = "production"
+        arguments.account_name     = "ey"
+        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.stack            = "nginx_unicorn"
+        arguments.framework_env    = "production"
       end
       last_command(adapter)
     end

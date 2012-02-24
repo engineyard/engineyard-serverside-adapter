@@ -17,10 +17,10 @@ describe EY::Serverside::Adapter::DisableMaintenancePage do
   context "with valid arguments" do
     let(:command) do
       adapter = described_class.new do |arguments|
-        arguments.app = "rackapp"
+        arguments.app              = "rackapp"
         arguments.environment_name = "rackapp_production"
-        arguments.account_name = "ey"
-        arguments.instances = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.account_name     = "ey"
+        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
       end
       last_command(adapter)
     end
