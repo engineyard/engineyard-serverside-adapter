@@ -3,12 +3,14 @@ require 'spec_helper'
 shared_examples_for "a serverside action" do
   before(:each) do
     @adapter = described_class.new do |args|
-      args.app           = 'app-from-adapter-new'
-      args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
-      args.framework_env = 'production'
-      args.ref           = 'master'
-      args.repo          = 'git@github.com:engineyard/engineyard-serverside.git'
-      args.stack         = 'nginx_unicorn'
+      args.app              = 'app-from-adapter-new'
+      args.environment_name = 'env-from-adapter-new'
+      args.account_name     = 'acc-from-adapter-new'
+      args.instances        = [{:hostname => 'localhost', :roles => %w[a b c]}]
+      args.framework_env    = 'production'
+      args.ref              = 'master'
+      args.repo             = 'git@github.com:engineyard/engineyard-serverside.git'
+      args.stack            = 'nginx_unicorn'
       args
     end
   end
@@ -54,12 +56,14 @@ shared_examples_for "a serverside action" do
   context "with a pathname specified" do
     it "begins both commands with the given path" do
       adapter = described_class.new("/usr/local/grin") do |args|
-        args.app           = 'app-from-adapter-new'
-        args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
-        args.framework_env = 'production'
-        args.ref           = 'master'
-        args.repo          = 'git@github.com:engineyard/engineyard-serverside.git'
-        args.stack         = 'nginx_unicorn'
+        args.app              = 'app-from-adapter-new'
+        args.environment_name = 'env-from-adapter-new'
+        args.account_name     = 'acc-from-adapter-new'
+        args.instances        = [{:hostname => 'localhost', :roles => %w[a b c]}]
+        args.framework_env    = 'production'
+        args.ref              = 'master'
+        args.repo             = 'git@github.com:engineyard/engineyard-serverside.git'
+        args.stack            = 'nginx_unicorn'
         args
       end
 
@@ -104,12 +108,14 @@ describe EY::Serverside::Adapter do
   context "mapping of methods to action classes" do
     before(:each) do
       @adapter = described_class.new do |args|
-        args.app           = 'app-from-adapter-new'
-        args.instances     = [{:hostname => 'localhost', :roles => %w[a b c]}]
-        args.framework_env = 'production'
-        args.ref           = 'master'
-        args.repo          = 'git@github.com:engineyard/engineyard-serverside.git'
-        args.stack         = 'nginx_unicorn'
+        args.app              = 'app-from-adapter-new'
+        args.environment_name = 'env-from-adapter-new'
+        args.account_name     = 'acc-from-adapter-new'
+        args.instances        = [{:hostname => 'localhost', :roles => %w[a b c]}]
+        args.framework_env    = 'production'
+        args.ref              = 'master'
+        args.repo             = 'git@github.com:engineyard/engineyard-serverside.git'
+        args.stack            = 'nginx_unicorn'
         args
       end
     end

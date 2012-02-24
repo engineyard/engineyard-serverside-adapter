@@ -3,9 +3,11 @@ module EY
     class Adapter
       class DisableMaintenancePage < Action
 
-        option :app,       :string,    :required => true
-        option :instances, :instances, :required => true
-        option :verbose,   :boolean
+        option :app,              :string,    :required => true
+        option :account_name,     :string,    :required => true
+        option :environment_name, :string,    :required => true
+        option :instances,        :instances, :required => true
+        option :verbose,          :boolean
 
       private
 

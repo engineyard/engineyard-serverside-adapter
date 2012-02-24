@@ -3,15 +3,17 @@ module EY
     class Adapter
       class Deploy < Action
 
-        option :app,           :string,    :required => true
-        option :stack,         :string,    :required => true
-        option :instances,     :instances, :required => true
-        option :config,        :json
-        option :verbose,       :boolean
-        option :framework_env, :string,    :required => true
-        option :ref,           :string,    :required => true
-        option :repo,          :string,    :required => true
-        option :migrate,       :string
+        option :app,              :string,    :required => true
+        option :account_name,     :string,    :required => true
+        option :environment_name, :string,    :required => true
+        option :stack,            :string,    :required => true
+        option :instances,        :instances, :required => true
+        option :config,           :json
+        option :verbose,          :boolean
+        option :framework_env,    :string,    :required => true
+        option :ref,              :string,    :required => true
+        option :repo,             :string,    :required => true
+        option :migrate,          :string
 
       private
 

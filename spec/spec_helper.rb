@@ -7,12 +7,14 @@ require 'pp'
 module ArgumentsHelpers
   def valid_options
     {
-      :app           => 'rackapp',
-      :framework_env => 'production',
-      :instances     => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
-      :ref           => 'master',
-      :repo          => 'git@github.com:engineyard/engineyard-serverside.git',
-      :stack         => 'nginx_unicorn',
+      :app              => 'rackapp',
+      :environment_name => 'rackapp_production',
+      :account_name     => 'ey',
+      :framework_env    => 'production',
+      :instances        => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
+      :ref              => 'master',
+      :repo             => 'git@github.com:engineyard/engineyard-serverside.git',
+      :stack            => 'nginx_unicorn',
     }
   end
 
@@ -103,12 +105,14 @@ RSpec.configure do |config|
   end
 
   {
-    :app           => '--app',
-    :stack         => '--stack',
-    :framework_env => '--framework-env',
-    :ref           => '--ref',
-    :repo          => '--repo',
-    :migrate       => '--migrate',
+    :app              => '--app',
+    :environment_name => '--environment-name',
+    :account_name     => '--account-name',
+    :stack            => '--stack',
+    :framework_env    => '--framework-env',
+    :ref              => '--ref',
+    :repo             => '--repo',
+    :migrate          => '--migrate',
   }.each do |arg, switch|
     shared_examples_for "it accepts #{arg}" do
       it "puts the #{switch} arg in the command line" do

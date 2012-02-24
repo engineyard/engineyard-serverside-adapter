@@ -3,11 +3,13 @@ module EY
     class Adapter
       class Integrate < Action
 
-        option :app,           :string,    :required => true
-        option :stack,         :string,    :required => true
-        option :instances,     :instances, :required => true
-        option :framework_env, :string,    :required => true
-        option :verbose,       :boolean
+        option :app,              :string,    :required => true
+        option :account_name,     :string,    :required => true
+        option :environment_name, :string,    :required => true
+        option :stack,            :string,    :required => true
+        option :instances,        :instances, :required => true
+        option :framework_env,    :string,    :required => true
+        option :verbose,          :boolean
 
       private
 

@@ -1,10 +1,20 @@
 module EY
   module Serverside
     class Adapter
-      class Arguments < Struct.new(:app, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose)
+      class Arguments < Struct.new(:app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose)
 
         def app=(app)
           enforce_nonempty!('app', app)
+          super
+        end
+
+        def environment_name=(env)
+          enforce_nonempty!('environment_name', env)
+          super
+        end
+
+        def account_name=(acc)
+          enforce_nonempty!('account_name', acc)
           super
         end
 
