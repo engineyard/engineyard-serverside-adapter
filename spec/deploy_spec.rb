@@ -67,4 +67,46 @@ describe EY::Serverside::Adapter::Deploy do
       ].join(' ')
     end
   end
+
+  context "with no migrate argument" do
+    let(:command) do
+      adapter = described_class.new do |arguments|
+        arguments.app              = "rackapp"
+        arguments.environment_name = 'rackapp_production'
+        arguments.account_name     = 'ey'
+        arguments.framework_env    = 'production'
+        arguments.config           = {'a' => 1}
+        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.migrate          = false
+        arguments.ref              = 'master'
+        arguments.repo             = 'git@github.com:engineyard/engineyard-serverside.git'
+        arguments.stack            = "nginx_unicorn"
+      end
+      last_command(adapter)
+    end
+
+    it "puts the config in the command line as json" do
+      command.should =~ /--config '#{Regexp.quote '{"a":1}'}'/
+    end
+
+    it "invokes exactly the right command" do
+      command.should == [
+        "engineyard-serverside",
+        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "deploy",
+        "--account-name ey",
+        "--app rackapp",
+        "--config '{\"a\":1}'",
+        "--environment-name rackapp_production",
+        "--framework-env production",
+        "--instance-names localhost:chewie",
+        "--instance-roles localhost:han,solo",
+        "--instances localhost",
+        "--no-migrate",
+        "--ref master",
+        "--repo git@github.com:engineyard/engineyard-serverside.git",
+        "--stack nginx_unicorn",
+      ].join(' ')
+    end
+  end
 end

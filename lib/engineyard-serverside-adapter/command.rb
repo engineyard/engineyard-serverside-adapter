@@ -55,7 +55,9 @@ module EY
         end
 
         def string_argument(switch, value)
-          unless value.to_s.empty?
+          if !value
+            @arguments << [switch.sub(/^--/,'--no-')] # specifically for no-migrate
+          elsif !value.to_s.empty?
             @arguments << [switch, value]
           end
         end
