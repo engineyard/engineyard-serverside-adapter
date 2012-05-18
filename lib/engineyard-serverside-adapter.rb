@@ -3,6 +3,7 @@ require 'pathname'
 module EY
   module Serverside
     class Adapter
+      require 'engineyard-serverside-adapter/version'
       autoload :Action,                 'engineyard-serverside-adapter/action'
       autoload :Arguments,              'engineyard-serverside-adapter/arguments'
       autoload :Command,                'engineyard-serverside-adapter/command'
@@ -12,9 +13,6 @@ module EY
       autoload :Integrate,              'engineyard-serverside-adapter/integrate'
       autoload :Restart,                'engineyard-serverside-adapter/restart'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
-      autoload :VERSION,                'engineyard-serverside-adapter/version'
-
-      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || VERSION
 
       def initialize(gem_bin_path = "")
         @gem_bin_path = Pathname.new(gem_bin_path)

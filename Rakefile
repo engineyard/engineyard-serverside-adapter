@@ -32,6 +32,7 @@ module EY
   module Serverside
     class Adapter
       VERSION = "#{new_version}"
+      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || "#{new_version}"
     end
   end
 end
