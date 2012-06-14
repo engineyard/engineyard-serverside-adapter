@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EY::Serverside::Adapter::DisableMaintenancePage do
+describe EY::Serverside::Adapter::DisableMaintenance do
   it_should_behave_like "it installs engineyard-serverside"
 
   it_should_behave_like "it accepts app"
@@ -29,7 +29,7 @@ describe EY::Serverside::Adapter::DisableMaintenancePage do
       command.should == [
         "engineyard-serverside",
         "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
-        "deploy disable_maintenance_page",
+        "disable_maintenance",
         "--account-name ey",
         "--app rackapp",
         "--environment-name rackapp_production",

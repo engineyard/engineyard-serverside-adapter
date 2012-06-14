@@ -93,8 +93,8 @@ describe EY::Serverside::Adapter do
 
   [
     :deploy,
-    :disable_maintenance_page,
-    :enable_maintenance_page,
+    :disable_maintenance,
+    :enable_maintenance,
     :integrate,
     :restart,
     :rollback,
@@ -121,11 +121,11 @@ describe EY::Serverside::Adapter do
     end
 
     it "gives you the right command" do
-      @adapter.enable_maintenance_page.should  be_kind_of(EY::Serverside::Adapter::EnableMaintenancePage)
-      @adapter.disable_maintenance_page.should be_kind_of(EY::Serverside::Adapter::DisableMaintenancePage)
-      @adapter.deploy.should                   be_kind_of(EY::Serverside::Adapter::Deploy)
-      @adapter.integrate.should                be_kind_of(EY::Serverside::Adapter::Integrate)
-      @adapter.rollback.should                 be_kind_of(EY::Serverside::Adapter::Rollback)
+      @adapter.enable_maintenance.should  be_kind_of(EY::Serverside::Adapter::EnableMaintenance)
+      @adapter.disable_maintenance.should be_kind_of(EY::Serverside::Adapter::DisableMaintenance)
+      @adapter.deploy.should              be_kind_of(EY::Serverside::Adapter::Deploy)
+      @adapter.integrate.should           be_kind_of(EY::Serverside::Adapter::Integrate)
+      @adapter.rollback.should            be_kind_of(EY::Serverside::Adapter::Rollback)
     end
   end
 

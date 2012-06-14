@@ -1,7 +1,7 @@
 module EY
   module Serverside
     class Adapter
-      class DisableMaintenancePage < Action
+      class DisableMaintenance < Action
 
         option :app,              :string,    :required => true
         option :account_name,     :string,    :required => true
@@ -12,7 +12,7 @@ module EY
       private
 
         def task
-          ['deploy', 'disable_maintenance_page']
+          ['disable_maintenance']
         end
 
       end

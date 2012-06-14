@@ -8,8 +8,8 @@ module EY
       autoload :Arguments,              'engineyard-serverside-adapter/arguments'
       autoload :Command,                'engineyard-serverside-adapter/command'
       autoload :Deploy,                 'engineyard-serverside-adapter/deploy'
-      autoload :DisableMaintenancePage, 'engineyard-serverside-adapter/disable_maintenance_page'
-      autoload :EnableMaintenancePage,  'engineyard-serverside-adapter/enable_maintenance_page'
+      autoload :DisableMaintenance,     'engineyard-serverside-adapter/disable_maintenance'
+      autoload :EnableMaintenance,      'engineyard-serverside-adapter/enable_maintenance'
       autoload :Integrate,              'engineyard-serverside-adapter/integrate'
       autoload :Restart,                'engineyard-serverside-adapter/restart'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
@@ -25,12 +25,12 @@ module EY
         Deploy.new(new_action_args, &b)
       end
 
-      def disable_maintenance_page(&b)
-        DisableMaintenancePage.new(new_action_args, &b)
+      def disable_maintenance(&b)
+        DisableMaintenance.new(new_action_args, &b)
       end
 
-      def enable_maintenance_page(&b)
-        EnableMaintenancePage.new(new_action_args, &b)
+      def enable_maintenance(&b)
+        EnableMaintenance.new(new_action_args, &b)
       end
 
       def integrate(&b)
