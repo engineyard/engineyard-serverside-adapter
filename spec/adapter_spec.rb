@@ -76,6 +76,18 @@ shared_examples_for "a serverside action" do
       commands.last.should =~ %r{^/usr/local/grin/engineyard-serverside}
     end
   end
+
+  context "with an alternate serverside_version specified" do
+    it "uses the given version for the gem install and serverside commands" do
+      action = @adapter.send(@method) do |args|
+        args.serverside_version = '1.6.4'
+      end
+
+      commands = all_commands(action)
+      commands.first.should == "(gem list engineyard-serverside | grep 'engineyard-serverside ' | egrep -q '1\\.6\\.4[,)]') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v 1.6.4')"
+      commands.last.should =~ /engineyard-serverside _1\.6\.4_/
+    end
+  end
 end
 
 describe EY::Serverside::Adapter do

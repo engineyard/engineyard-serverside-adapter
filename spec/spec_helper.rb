@@ -142,6 +142,13 @@ RSpec.configure do |config|
     end
   end
 
+  shared_examples_for "it accepts serverside_version" do
+    it "puts the _VERSION_ command part in the command line" do
+      adapter = described_class.new(:arguments => arguments_with(:serverside_version => '1.2.3'))
+      last_command(adapter).should =~ /engineyard-serverside _1.2.3_/
+    end
+  end
+
   shared_examples_for "it accepts instances" do
     context "given an unnamed instance" do
       it "puts the instance in the command line" do

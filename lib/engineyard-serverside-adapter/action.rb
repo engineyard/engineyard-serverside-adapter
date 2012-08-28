@@ -10,6 +10,7 @@ module EY
           @gem_bin_path = Pathname.new(options[:gem_bin_path] || "")
           arguments = options[:arguments] || Arguments.new
           block.call arguments if block
+          @serverside_version = arguments.serverside_version
 
           extract_state_from_arguments(arguments)
           validate!
@@ -45,8 +46,12 @@ module EY
           "(#{check_command}) || (#{install_command})"
         end
 
+        def engineyard_serverside_version
+          @serverside_version || ENGINEYARD_SERVERSIDE_VERSION
+        end
+
         def check_command
-          escaped_engineyard_serverside_version = ENGINEYARD_SERVERSIDE_VERSION.gsub(/\./, '\.')
+          escaped_engineyard_serverside_version = engineyard_serverside_version.gsub(/\./, '\.')
 
           [
             Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
@@ -62,7 +67,7 @@ module EY
           #
           # rubygems help suggests that --remote will disable this
           # behavior, but it doesn't.
-          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{ENGINEYARD_SERVERSIDE_VERSION}"
+          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{engineyard_serverside_version}"
           Escape.shell_command(['sudo', 'sh', '-c', install_command])
         end
 
@@ -71,7 +76,7 @@ module EY
         end
 
         def action_command
-          cmd = Command.new(@gem_bin_path, *task)
+          cmd = Command.new(@gem_bin_path, engineyard_serverside_version, *task)
           @state.each do |option_name, value|
             option_type = self.class.options[option_name][:type]
             switch = "--" + option_name.to_s.gsub(/_/, '-')

@@ -25,4 +25,10 @@ describe EY::Serverside::Adapter::Arguments do
     end
   end
 
+  it "raises an ArgumentError immediately when serverside_version is weird" do
+    raises_argument_error(/Malformed version number string what the flower/) do |arguments|
+      arguments.serverside_version = 'what the flower'
+    end
+  end
+
 end

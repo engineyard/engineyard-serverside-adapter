@@ -10,6 +10,7 @@ describe EY::Serverside::Adapter::Rollback do
   it_should_behave_like "it accepts instances"
   it_should_behave_like "it accepts stack"
   it_should_behave_like "it accepts verbose"
+  it_should_behave_like "it accepts serverside_version"
 
   it_should_require :app
   it_should_require :environment_name

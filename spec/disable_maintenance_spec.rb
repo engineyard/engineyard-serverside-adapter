@@ -8,6 +8,7 @@ describe EY::Serverside::Adapter::DisableMaintenance do
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts instances"
   it_should_behave_like "it accepts verbose"
+  it_should_behave_like "it accepts serverside_version"
 
   it_should_require :app
   it_should_require :environment_name

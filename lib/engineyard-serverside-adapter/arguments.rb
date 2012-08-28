@@ -14,8 +14,8 @@ module EY
           end
         end
 
-        attr_reader     :app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose
-        nonempty_writer :app, :environment_name, :account_name, :framework_env, :ref, :repo, :stack
+        attr_reader     :app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :serverside_version, :stack, :verbose
+        nonempty_writer :app, :environment_name, :account_name, :framework_env, :ref, :repo, :serverside_version, :stack
         attr_writer     :config, :migrate, :verbose
 
         def instances=(instances)
@@ -34,6 +34,10 @@ module EY
           end
 
           @instances = instances
+        end
+
+        def serverside_version=(value)
+          @serverside_version = Gem::Version.new(value).to_s
         end
 
       end

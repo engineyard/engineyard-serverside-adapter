@@ -13,6 +13,7 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_behave_like "it accepts repo"
   it_should_behave_like "it accepts stack"
   it_should_behave_like "it accepts verbose"
+  it_should_behave_like "it accepts serverside_version"
 
   it_should_require :app
   it_should_require :environment_name

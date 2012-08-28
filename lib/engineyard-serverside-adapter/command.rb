@@ -5,14 +5,15 @@ module EY
   module Serverside
     class Adapter
       class Command
-        def initialize(bin_path, *task)
+        def initialize(bin_path, serverside_version, *task)
+          @binary = bin_path.join('engineyard-serverside').to_s
+          @serverside_version = serverside_version
           @task = task
           @arguments = []
-          @binary = bin_path.join('engineyard-serverside').to_s
         end
 
         def to_s
-          Escape.shell_command [@binary, "_#{ENGINEYARD_SERVERSIDE_VERSION}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
+          Escape.shell_command [@binary, "_#{@serverside_version}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
         end
 
         def array_argument(switch, values)
