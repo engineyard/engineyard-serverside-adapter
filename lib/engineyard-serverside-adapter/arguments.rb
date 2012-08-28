@@ -1,27 +1,22 @@
 module EY
   module Serverside
     class Adapter
-      class Arguments < Struct.new(:app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose)
+      class Arguments
 
-        def app=(app)
-          enforce_nonempty!('app', app)
-          super
+        def self.nonempty_writer(*names)
+          names.each do |name|
+            define_method(:"#{name}=") do |value|
+              if value.to_s.empty?
+                raise ArgumentError, "Value for '#{name}' must be non-empty."
+              end
+              instance_variable_set("@#{name}", value)
+            end
+          end
         end
 
-        def environment_name=(env)
-          enforce_nonempty!('environment_name', env)
-          super
-        end
-
-        def account_name=(acc)
-          enforce_nonempty!('account_name', acc)
-          super
-        end
-
-        def framework_env=(framework_env)
-          enforce_nonempty!('framework_env', framework_env)
-          super
-        end
+        attr_reader     :app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :stack, :verbose
+        nonempty_writer :app, :environment_name, :account_name, :framework_env, :ref, :repo, :stack
+        attr_writer     :config, :migrate, :verbose
 
         def instances=(instances)
           unless instances.respond_to?(:each)
@@ -38,30 +33,7 @@ module EY
             end
           end
 
-          super
-        end
-
-        def ref=(ref)
-          enforce_nonempty!('ref', ref)
-          super
-        end
-
-        def repo=(repo)
-          enforce_nonempty!('repo', repo)
-          super
-        end
-
-        def stack=(stack)
-          enforce_nonempty!('stack', stack)
-          super
-        end
-
-        private
-
-        def enforce_nonempty!(name, value)
-          if value.to_s.empty?
-            raise ArgumentError, "Value for '#{name}' must be non-empty."
-          end
+          @instances = instances
         end
 
       end
