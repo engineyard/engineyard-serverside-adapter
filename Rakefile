@@ -6,11 +6,12 @@ task :default => :spec
 
 desc "Release engineyard-serverside-adapter gem"
 task :release do
-  new_version = bump_to_latest_serverside
-  (system("git add lib/engineyard-serverside-adapter/version.rb") &&
-    system("git commit -am 'Bump to engineyard-serverside version #{new_version}'") &&
-    system("git tag v#{new_version}") &&
-    system("gem build engineyard-serverside-adapter.gemspec"))
+  new_version = remove_pre
+
+  run_commands("git tag v#{new_version}",
+    "gem build engineyard-serverside-adapter.gemspec")
+
+  next_pre(new_version)
 
   puts <<-PUSHGEM
 ## To publish the gem: #########################################################
@@ -22,25 +23,41 @@ task :release do
   PUSHGEM
 end
 
-def bump_to_latest_serverside
-  specs = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new("engineyard-serverside"))
-  versions = specs.map {|spec,| spec.version}.sort
-  new_version = versions.last.to_s
+def version_path
+  Pathname.new('lib/engineyard-serverside-adapter/version.rb')
+end
 
-  serverside_version_file =<<-EOT
-module EY
-  module Serverside
-    class Adapter
-      VERSION = "#{new_version}"
-      ENGINEYARD_SERVERSIDE_VERSION = ENV['ENGINEYARD_SERVERSIDE_VERSION'] || "#{new_version}"
-    end
+def run_commands(*cmds)
+  cmds.flatten.each do |c|
+    system(c) or raise "Command #{c.inspect} failed to execute; aborting!"
   end
 end
-  EOT
 
-  puts "Using engineyard-serverside version #{new_version}"
-  File.open('lib/engineyard-serverside-adapter/version.rb', 'w') do |f|
-    f.write serverside_version_file
+def remove_pre
+  require 'engineyard-serverside-adapter/version'
+  version = EY::Serverside::Adapter::VERSION
+  unless version =~ /\.pre$/
+    raise "Version #{version.inspect} does not end with .pre, you should release manually if you want a custom version name."
   end
+  new_version = version.gsub(/\.pre$/, '')
+  puts "New version is #{new_version}"
+  bump(new_version, "Bump to version #{new_version}")
   new_version
+end
+
+def next_pre(version)
+  digits = version.scan(/(\d+)/).map { |x| x.first.to_i }
+  digits[-1] += 1
+  new_version = digits.join('.') + ".pre"
+  puts "Next version is #{new_version}"
+  bump(new_version, "Add .pre for next release")
+end
+
+def bump(new_version, commit_msg)
+  contents = version_path.read.sub(/VERSION = "[^"]+"/, %|VERSION = "#{new_version}"|)
+  version_path.unlink
+  version_path.open('w') { |f| f.write contents }
+  run_commands(
+    "git add #{version_path}",
+    "git commit -m '#{commit_msg}'")
 end
