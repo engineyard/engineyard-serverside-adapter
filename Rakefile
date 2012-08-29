@@ -6,6 +6,9 @@ task :default => :spec
 
 desc "Release engineyard-serverside-adapter gem"
 task :release do
+  puts "Adapter DOES NOT bump serverside automatically anymore."
+  puts "Please reference the serverside_version in the client."
+  puts
   new_version = remove_pre
 
   run_commands("git tag v#{new_version}",
