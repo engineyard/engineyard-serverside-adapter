@@ -38,14 +38,10 @@ end
 
 def remove_pre
   require 'engineyard-serverside-adapter/version'
-  version = EY::Serverside::Adapter::VERSION
-  unless version =~ /\.pre$/
-    raise "Version #{version.inspect} does not end with .pre, you should release manually if you want a custom version name."
-  end
-  new_version = version.gsub(/\.pre$/, '')
+  new_version = Gem::Version.create(EY::Serverside::Adapter::VERSION).release
   puts "New version is #{new_version}"
   bump(new_version, "Bump to version #{new_version}")
-  new_version
+  new_version.to_s
 end
 
 def next_pre(version)
