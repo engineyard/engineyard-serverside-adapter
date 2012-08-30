@@ -6,17 +6,44 @@ module EY
         def self.nonempty_writer(*names)
           names.each do |name|
             define_method(:"#{name}=") do |value|
-              if value.to_s.empty?
+              if value.nil? || value.to_s.empty?
                 raise ArgumentError, "Value for '#{name}' must be non-empty."
               end
-              instance_variable_set("@#{name}", value)
+              self[name] = value
             end
           end
         end
 
-        attr_reader     :app, :environment_name, :account_name, :config, :framework_env, :instances, :migrate, :ref, :repo, :serverside_version, :stack, :verbose
+        def self.writer(*names)
+          names.each do |name|
+            define_method(:"#{name}=") do |value|
+              self[name] = value
+            end
+          end
+        end
+
         nonempty_writer :app, :environment_name, :account_name, :framework_env, :ref, :repo, :serverside_version, :stack
-        attr_writer     :config, :migrate, :verbose
+        writer :config, :migrate, :verbose
+
+        def initialize(data={})
+          @data = data
+        end
+
+        def dup
+          self.class.new(@data.dup)
+        end
+
+        def []=(key, val)
+          @data[key.to_sym] = val
+        end
+
+        def [](key)
+          @data[key.to_sym]
+        end
+
+        def key?(key)
+          @data.key?(key.to_sym)
+        end
 
         def instances=(instances)
           unless instances.respond_to?(:each)
@@ -33,11 +60,15 @@ module EY
             end
           end
 
-          @instances = instances
+          self[:instances] = instances
         end
 
         def serverside_version=(value)
-          @serverside_version = Gem::Version.new(value).to_s
+          self[:serverside_version] = Gem::Version.create(value).to_s
+        end
+
+        def method_missing(meth, *)
+          key?(meth) ? self[meth] : super
         end
 
       end

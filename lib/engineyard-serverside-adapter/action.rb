@@ -1,5 +1,7 @@
 require 'escape'
 require 'pathname'
+require 'engineyard-serverside-adapter/option'
+require 'engineyard-serverside-adapter/arguments'
 
 module EY
   module Serverside
@@ -8,11 +10,9 @@ module EY
 
         def initialize(options = {}, &block)
           @gem_bin_path = Pathname.new(options[:gem_bin_path] || "")
-          arguments = options[:arguments] || Arguments.new
-          block.call arguments if block
-          @serverside_version = arguments.serverside_version
-
-          extract_state_from_arguments(arguments)
+          @arguments = options[:arguments] || Arguments.new
+          block.call @arguments if block
+          @serverside_version = @arguments[:serverside_version]
           validate!
         end
 
@@ -22,24 +22,22 @@ module EY
         end
 
         def verbose
-          @state[:verbose]
+          @arguments[:verbose]
         end
 
         class << self
           attr_accessor :options
 
-          def option(name, type, extra={:required => false})
-            self.options ||= {}
-            options[name] = extra.merge({:type => type})
+          def option(*args)
+            self.options ||= []
+            options << Option.new(*args)
           end
         end
 
       private
 
-        def extract_state_from_arguments(arguments)
-          @state = self.class.options.inject({}) do |acc, (option_name, option_attrs)|
-            acc.merge(option_name => arguments.send(option_name))
-          end
+        def applicable_options
+          @applicable_options ||= self.class.options.select { |option| option.on_version?(engineyard_serverside_version) }
         end
 
         def check_and_install_command
@@ -77,18 +75,16 @@ module EY
 
         def action_command
           cmd = Command.new(@gem_bin_path, engineyard_serverside_version, *task)
-          @state.each do |option_name, value|
-            option_type = self.class.options[option_name][:type]
-            switch = "--" + option_name.to_s.gsub(/_/, '-')
-            cmd.send("#{option_type}_argument", switch, value)
+          applicable_options.each do |option|
+            cmd.send("#{option.type}_argument", option.to_switch, @arguments[option.name])
           end
           cmd
         end
 
         def validate!
-          self.class.options.each do |option_name, option_attrs|
-            if option_attrs[:required] && !@state[option_name]
-              raise ArgumentError, "Required field '#{option_name}' not provided."
+          applicable_options.each do |option|
+            if option.required? && !@arguments[option.name]
+              raise ArgumentError, "Required field '#{option.name}' not provided."
             end
           end
         end

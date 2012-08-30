@@ -1,0 +1,28 @@
+module EY
+  module Serverside
+    class Adapter
+      class Option
+        attr_reader :name, :type
+
+        def initialize(name, type, options={:required => false})
+          @name, @type = name, type
+          @version_requirement = Gem::Requirement.create(options[:version]) if options[:version]
+          @options = options
+        end
+
+        def to_switch
+          "--#{@name}".gsub(/_/, '-')
+        end
+
+        def on_version?(version)
+          !@version_requirement or @version_requirement.satisfied_by?(Gem::Version.create(version))
+        end
+
+        def required?
+          @options[:required]
+        end
+
+      end
+    end
+  end
+end

@@ -15,6 +15,9 @@ describe EY::Serverside::Adapter::DisableMaintenance do
   it_should_require :account_name
   it_should_require :instances
 
+  it_should_ignore_requirement_for_version :environment_name, '1.6.4'
+  it_should_ignore_requirement_for_version :account_name,     '1.6.4'
+
   context "with valid arguments" do
     let(:command) do
       adapter = described_class.new do |arguments|

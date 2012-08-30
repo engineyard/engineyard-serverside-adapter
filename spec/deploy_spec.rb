@@ -24,6 +24,9 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_require :repo
   it_should_require :stack
 
+  it_should_ignore_requirement_for_version :environment_name, '1.6.4'
+  it_should_ignore_requirement_for_version :account_name,     '1.6.4'
+
   it_should_behave_like "it treats config as optional"
   it_should_behave_like "it treats migrate as optional"
 

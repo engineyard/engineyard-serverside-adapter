@@ -59,6 +59,24 @@ module RequiredFieldHelpers
       end
     end
   end
+
+  def it_should_ignore_requirement_for_version(field, version)
+    context "field #{field} on version #{version}" do
+      it "is does not require #{field}" do
+        arguments = arguments_without(field)
+        arguments.serverside_version = version
+        lambda { described_class.new(:arguments => arguments) }.should_not raise_error
+      end
+
+      it "it does not include #{field} in the command, even if it is set" do
+        arguments = valid_arguments
+        arguments.serverside_version = version
+        action = described_class.new(:arguments => arguments)
+        commands = all_commands(action)
+        commands.last.should_not include(EY::Serverside::Adapter::Option.new(field, :string).to_switch)
+      end
+    end
+  end
 end
 
 RSpec.configure do |config|
