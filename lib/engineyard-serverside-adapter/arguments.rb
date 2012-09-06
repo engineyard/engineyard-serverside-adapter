@@ -64,7 +64,7 @@ module EY
         end
 
         def serverside_version=(value)
-          self[:serverside_version] = Gem::Version.create(value).to_s
+          self[:serverside_version] = Gem::Version.create(value.dup) # dup b/c Gem::Version sometimes modifies its argument :(
         end
 
         def method_missing(meth, *)

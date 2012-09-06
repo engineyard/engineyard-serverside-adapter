@@ -13,6 +13,7 @@ module EY
           @arguments = options[:arguments] || Arguments.new
           block.call @arguments if block
           @serverside_version = @arguments[:serverside_version]
+          @serverside_version ||= Gem::Version.create(ENGINEYARD_SERVERSIDE_VERSION.dup)
           validate!
         end
 
@@ -37,24 +38,20 @@ module EY
       private
 
         def applicable_options
-          @applicable_options ||= self.class.options.select { |option| option.on_version?(engineyard_serverside_version) }
+          @applicable_options ||= self.class.options.select { |option| option.on_version?(@serverside_version) }
         end
 
         def check_and_install_command
           "(#{check_command}) || (#{install_command})"
         end
 
-        def engineyard_serverside_version
-          @serverside_version || ENGINEYARD_SERVERSIDE_VERSION
-        end
-
         def check_command
-          escaped_engineyard_serverside_version = engineyard_serverside_version.gsub(/\./, '\.')
+          escaped_serverside_version = @serverside_version.to_s.gsub(/\./, '\.')
 
           [
             Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
             Escape.shell_command(["grep", "engineyard-serverside "]),
-            Escape.shell_command(["egrep", "-q", "#{escaped_engineyard_serverside_version}[,)]"]),
+            Escape.shell_command(["egrep", "-q", "#{escaped_serverside_version}[,)]"]),
           ].join(" | ")
         end
 
@@ -65,7 +62,7 @@ module EY
           #
           # rubygems help suggests that --remote will disable this
           # behavior, but it doesn't.
-          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{engineyard_serverside_version}"
+          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{@serverside_version}"
           Escape.shell_command(['sudo', 'sh', '-c', install_command])
         end
 
@@ -74,7 +71,7 @@ module EY
         end
 
         def action_command
-          cmd = Command.new(@gem_bin_path, engineyard_serverside_version, *task)
+          cmd = Command.new(@gem_bin_path, @serverside_version, *task)
           applicable_options.each do |option|
             cmd.send("#{option.type}_argument", option.to_switch, @arguments[option.name])
           end

@@ -14,8 +14,8 @@ module EY
           "--#{@name}".gsub(/_/, '-')
         end
 
-        def on_version?(version)
-          !@version_requirement or @version_requirement.satisfied_by?(Gem::Version.create(version))
+        def on_version?(serverside_version)
+          !@version_requirement or @version_requirement.satisfied_by?(serverside_version)
         end
 
         def required?
