@@ -1,4 +1,9 @@
-source :gemcutter
+source :rubygems
 
-# Specify your gem's dependencies in engineyard-serverside-adapter.gemspec
 gemspec
+
+group :guard do
+  gem 'guard', :require => false
+  gem 'guard-rspec', :require => false
+  gem 'rb-fsevent', '~> 0.9.1', :require => false
+end
