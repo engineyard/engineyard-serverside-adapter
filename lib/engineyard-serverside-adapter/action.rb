@@ -8,12 +8,20 @@ module EY
     class Adapter
       class Action
 
+        GEM_NAME = 'engineyard-serverside'
+        BIN_NAME = GEM_NAME
+
         def initialize(options = {}, &block)
           @gem_bin_path = Pathname.new(options[:gem_bin_path] || "")
-          @arguments = options[:arguments] || Arguments.new
+
+          @arguments           = options[:arguments]           || Arguments.new
+          @serverside_gem_name = options[:serverside_gem_name] || GEM_NAME
+          @serverside_bin_name = options[:serverside_bin_name] || BIN_NAME
+
           block.call @arguments if block
-          @serverside_version = @arguments[:serverside_version]
-          @serverside_version ||= Gem::Version.create(ENGINEYARD_SERVERSIDE_VERSION.dup)
+
+          @serverside_version = Gem::Version.create(@arguments.serverside_version || ENGINEYARD_SERVERSIDE_VERSION.dup)
+
           validate!
         end
 
@@ -46,11 +54,11 @@ module EY
         end
 
         def check_command
-          escaped_serverside_version = @serverside_version.to_s.gsub(/\./, '\.')
+          escaped_serverside_version = Regexp.escape(@serverside_version.to_s)
 
           [
-            Escape.shell_command([gem_path, "list", "engineyard-serverside"]),
-            Escape.shell_command(["grep", "engineyard-serverside "]),
+            Escape.shell_command([gem_command_path, "list", @serverside_gem_name]),
+            Escape.shell_command(["grep", "#{@serverside_gem_name} "]), # trailing space for better matching
             Escape.shell_command(["egrep", "-q", "#{escaped_serverside_version}[,)]"]),
           ].join(" | ")
         end
@@ -62,20 +70,24 @@ module EY
           #
           # rubygems help suggests that --remote will disable this
           # behavior, but it doesn't.
-          install_command = "cd `mktemp -d` && #{gem_path} install engineyard-serverside --no-rdoc --no-ri -v #{@serverside_version}"
+          install_command = "cd `mktemp -d` && #{gem_command_path} install #{@serverside_gem_name} --no-rdoc --no-ri -v #{@serverside_version}"
           Escape.shell_command(['sudo', 'sh', '-c', install_command])
         end
 
-        def gem_path
+        def gem_command_path
           @gem_bin_path.join('gem').to_s
         end
 
+        def serverside_command_path
+          @gem_bin_path.join(@serverside_bin_name).to_s
+        end
+
         def action_command
-          cmd = Command.new(@gem_bin_path, @serverside_version, *task)
-          applicable_options.each do |option|
-            cmd.send("#{option.type}_argument", option.to_switch, @arguments[option.name])
+          Command.new(serverside_command_path, @serverside_version, *task) do |cmd|
+            applicable_options.each do |option|
+              cmd.send("#{option.type}_argument", option.to_switch, @arguments[option.name])
+            end
           end
-          cmd
         end
 
         def validate!

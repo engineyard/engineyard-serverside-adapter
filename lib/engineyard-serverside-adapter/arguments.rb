@@ -5,6 +5,10 @@ module EY
 
         def self.nonempty_writer(*names)
           names.each do |name|
+            define_method(name) do
+              self[name]
+            end
+
             define_method(:"#{name}=") do |value|
               if value.nil? || value.to_s.empty?
                 raise ArgumentError, "Value for '#{name}' must be non-empty."
@@ -16,6 +20,10 @@ module EY
 
         def self.writer(*names)
           names.each do |name|
+            define_method(name) do
+              self[name]
+            end
+
             define_method(:"#{name}=") do |value|
               self[name] = value
             end
@@ -63,12 +71,9 @@ module EY
           self[:instances] = instances
         end
 
+        # Uses Gem::Version.create to validate the version string
         def serverside_version=(value)
           self[:serverside_version] = Gem::Version.create(value.dup) # dup b/c Gem::Version sometimes modifies its argument :(
-        end
-
-        def method_missing(meth, *)
-          key?(meth) ? self[meth] : super
         end
 
       end
