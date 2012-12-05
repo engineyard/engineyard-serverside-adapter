@@ -1,5 +1,5 @@
 require 'escape'
-require 'json'
+require 'multi_json'
 
 module EY
   module Serverside
@@ -51,7 +51,7 @@ module EY
 
         def json_argument(switch, value)
           if value
-            string_argument(switch, value.to_json)
+            string_argument(switch, MultiJson.dump(value))
           end
         end
 
