@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "engineyard-serverside-adapter"
 
   s.add_dependency             "escape",     "~> 0.0.4"
-  s.add_dependency             "json_pure"
+  s.add_dependency             "multi_json"
   s.add_development_dependency "rspec",      "~> 2.0"
   s.add_development_dependency "rake"
 
