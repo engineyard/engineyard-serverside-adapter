@@ -14,8 +14,12 @@ module EY
           yield self if block_given?
         end
 
+        def to_argv
+          [@binary, "_#{@version}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
+        end
+
         def to_s
-          Escape.shell_command [@binary, "_#{@version}_"] + @task + @arguments.sort_by { |x| x.first }.flatten
+          Escape.shell_command to_argv
         end
 
         def array_argument(switch, values)

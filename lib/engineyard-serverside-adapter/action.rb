@@ -26,8 +26,13 @@ module EY
         end
 
         def call(&block)
-          block.call check_and_install_command.to_s
-          block.call action_command.to_s
+          commands.each do |cmd|
+            block.call cmd.to_s
+          end
+        end
+
+        def commands
+          @commands ||= [check_and_install_command, action_command]
         end
 
         def verbose
