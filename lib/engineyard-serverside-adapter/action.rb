@@ -26,9 +26,7 @@ module EY
         end
 
         def call(&block)
-          commands.each do |cmd|
-            block.call cmd.to_s
-          end
+          commands.all? { |cmd| block.call(cmd.to_s) }
         end
 
         def commands

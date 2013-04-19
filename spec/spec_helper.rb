@@ -37,9 +37,7 @@ module ArgumentsHelpers
   end
 
   def all_commands(adapter)
-    commands = []
-    adapter.call { |command| commands << command }
-    commands
+    adapter.commands.map(&:to_s)
   end
 
   def last_command(adapter)

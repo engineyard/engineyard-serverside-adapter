@@ -31,6 +31,30 @@ shared_examples_for "a serverside action" do
     command.should include('--verbose')
   end
 
+  it "returns true when all commands succeed in call" do
+    action = @adapter.send(@method) do |args|
+      args.verbose = true
+    end
+
+    commands = []
+    action.call { |cmd| commands << cmd; true }.should be_true
+    commands.should have(2).entries
+  end
+
+  it "returns false when any commands fail in call, short circuiting if first command fails" do
+    action = @adapter.send(@method) do |args|
+      args.verbose = true
+    end
+
+    commands = []
+    action.call { |cmd| commands << cmd; false }.should be_false
+    commands.should have(1).entries
+
+    commands = []
+    action.call { |cmd| commands << cmd; commands.size == 1 ? true : false }.should be_false
+    commands.should have(2).entries
+  end
+
   it "does not let arguments changes propagate back up to the adapter" do
     command1 = @adapter.send(@method) do |args|
       args.app = 'sporkr'
