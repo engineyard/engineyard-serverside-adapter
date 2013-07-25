@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/engineyard/engineyard-serverside-adapter"
   s.summary     = "Adapter for speaking to engineyard-serverside"
   s.description = "A separate adapter for speaking the CLI language of the engineyard-serverside gem."
+  s.license = 'MIT'
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "engineyard-serverside-adapter"
