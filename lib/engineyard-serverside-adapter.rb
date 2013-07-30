@@ -14,11 +14,11 @@ module EY
       autoload :Restart,                'engineyard-serverside-adapter/restart'
       autoload :Rollback,               'engineyard-serverside-adapter/rollback'
 
-      def initialize(gem_bin_path = "")
+      def initialize(gem_bin_path = "", &block)
         @gem_bin_path = Pathname.new(gem_bin_path)
         @arguments    = Arguments.new
 
-        yield @arguments if block_given?
+        block.call(@arguments) if block
       end
 
       def deploy(&b)

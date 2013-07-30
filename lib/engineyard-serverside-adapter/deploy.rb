@@ -11,9 +11,14 @@ module EY
         option :config,           :json
         option :verbose,          :boolean
         option :framework_env,    :string,    :required => true
-        option :ref,              :string,    :required => true
-        option :repo,             :string,    :required => true
-        option :migrate,          :string
+
+        option :migrate,          :string,    :include => true
+
+        option :ref,              :string
+        option :repo,             :string
+
+        option :git,              :string
+        option :archive,          :string
 
       private
 
