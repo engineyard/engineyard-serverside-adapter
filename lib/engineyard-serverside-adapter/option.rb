@@ -18,6 +18,13 @@ module EY
           !@version_requirement or @version_requirement.satisfied_by?(serverside_version)
         end
 
+        # Check if the option should always be included.
+        #
+        # Returns a boolean.
+        def include?
+          @options[:include]
+        end
+
         def required?
           @options[:required]
         end

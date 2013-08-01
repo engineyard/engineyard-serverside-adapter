@@ -20,8 +20,6 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_require :account_name
   it_should_require :instances
   it_should_require :framework_env
-  it_should_require :ref
-  it_should_require :repo
   it_should_require :stack
 
   it_should_ignore_requirement_for_version :environment_name, '1.6.4'
@@ -70,6 +68,80 @@ describe EY::Serverside::Adapter::Deploy do
         "--stack nginx_unicorn",
       ].join(' ')
     end
+  end
+
+  context "with git deploy" do
+    let(:command) do
+      adapter = described_class.new do |arguments|
+        arguments.app              = "rackapp"
+        arguments.environment_name = 'rackapp_production'
+        arguments.account_name     = 'ey'
+        arguments.framework_env    = 'production'
+        arguments.config           = {'a' => 1}
+        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.migrate          = 'rake db:migrate'
+        arguments.ref              = 'master'
+        arguments.git              = 'git@github.com:engineyard/engineyard-serverside.git'
+        arguments.stack            = "nginx_unicorn"
+      end
+      last_command(adapter)
+    end
+
+    it "invokes exactly the right command" do
+      command.should == [
+        "engineyard-serverside",
+        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "deploy",
+        "--account-name ey",
+        "--app rackapp",
+        "--config '{\"a\":1}'",
+        "--environment-name rackapp_production",
+        "--framework-env production",
+        "--git git@github.com:engineyard/engineyard-serverside.git",
+        "--instance-names localhost:chewie",
+        "--instance-roles localhost:han,solo",
+        "--instances localhost",
+        "--migrate 'rake db:migrate'",
+        "--ref master",
+        "--stack nginx_unicorn"
+      ].join(' ')
+    end
+  end
+
+  context "with package deploy" do
+    let(:command) do
+      adapter = described_class.new do |args|
+        args.app              = "rackapp"
+        args.environment_name = 'rackapp_production'
+        args.account_name     = 'ey'
+        args.framework_env    = 'production'
+        args.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        args.migrate          = false
+        args.stack            = "nginx_unicorn"
+        args.archive          = 'https://github.com/engineyard/engineyard-serverside/archive/master.zip'
+      end
+
+      last_command(adapter)
+    end
+
+    it "invokes exactly the right command" do
+      command.should == [
+        "engineyard-serverside",
+        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "deploy",
+        "--account-name ey",
+        "--app rackapp",
+        "--archive https://github.com/engineyard/engineyard-serverside/archive/master.zip",
+        "--environment-name rackapp_production",
+        "--framework-env production",
+        "--instance-names localhost:chewie",
+        "--instance-roles localhost:han,solo",
+        "--instances localhost",
+        "--no-migrate",
+        "--stack nginx_unicorn"
+      ].join(' ')
+    end
+
   end
 
   context "with no migrate argument" do

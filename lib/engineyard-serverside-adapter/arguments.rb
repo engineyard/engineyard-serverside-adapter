@@ -30,7 +30,8 @@ module EY
           end
         end
 
-        nonempty_writer :app, :environment_name, :account_name, :framework_env, :ref, :repo, :serverside_version, :stack
+        nonempty_writer :app, :environment_name, :account_name, :framework_env,
+          :ref, :repo, :serverside_version, :stack, :archive, :git
         writer :config, :migrate, :verbose
 
         def initialize(data={})
