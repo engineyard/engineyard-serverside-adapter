@@ -85,10 +85,19 @@ module EY
           @gem_bin_path.join(@serverside_bin_name).to_s
         end
 
+        # Initialize a command from arguments.
+        #
+        # Returns an instance of Command.
         def action_command
           Command.new(serverside_command_path, @serverside_version, *task) do |cmd|
             applicable_options.each do |option|
-              cmd.send("#{option.type}_argument", option.to_switch, @arguments[option.name])
+              value = @arguments[option.name]
+
+              # only options with a value or with `:include` are used as
+              # command flags.
+              if (!value && option.include?) || value
+                cmd.send("#{option.type}_argument", option.to_switch, value)
+              end
             end
           end
         end

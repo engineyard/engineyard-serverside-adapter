@@ -14,6 +14,7 @@ module ArgumentsHelpers
       :instances        => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
       :ref              => 'master',
       :repo             => 'git@github.com:engineyard/engineyard-serverside.git',
+      :archive          => 'https://github.com/engineyard/engineyard-serverside/archive/master.zip',
       :stack            => 'nginx_unicorn',
     }
   end
