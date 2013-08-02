@@ -16,7 +16,7 @@ shared_examples_for "a serverside action" do
   end
 
   it "gives you an Arguments already set up from when you instantiated the adapter" do
-    command = @adapter.send(@method) do |args|
+    @adapter.send(@method) do |args|
       args.app.should == 'app-from-adapter-new'
     end
   end
@@ -56,7 +56,7 @@ shared_examples_for "a serverside action" do
   end
 
   it "does not let arguments changes propagate back up to the adapter" do
-    command1 = @adapter.send(@method) do |args|
+    @adapter.send(@method) do |args|
       args.app = 'sporkr'
     end
 
@@ -119,7 +119,7 @@ end
 describe EY::Serverside::Adapter do
   context ".new" do
     it "lets you access the arguments" do
-      adapter = described_class.new do |args|
+      described_class.new do |args|
         args.app = 'myapp'
       end
     end
@@ -167,4 +167,56 @@ describe EY::Serverside::Adapter do
     end
   end
 
+  context "for serverside older versions" do
+    def initialize_adapter(&block)
+      described_class.new do |args|
+        args.account_name       = "account_name"
+        args.environment_name   = "environment_name"
+        args.app                = "app_name"
+        args.stack              = "stack"
+        args.instances          = [{ :hostname => "a", :roles => ["solo"] }]
+        args.framework_env      = "test"
+        args.verbose            = true
+        block.call(args) if block
+      end
+    end
+
+    def deploy_command(adapter)
+      adapter.deploy.commands.last.to_s
+    end
+
+    context "~> 2.0" do
+      it "should set --repo and not --git flag" do
+        adapter = initialize_adapter do |args|
+          args.serverside_version = "2.0"
+          args.git = "git@github.com:engineyard/todo.git"
+        end
+
+        command = deploy_command(adapter)
+        expect(command).not_to match(/--git/)
+        expect(command).to match(/--repo/)
+      end
+    end # / 2.0
+
+    context "~> 2.3" do
+      it "should set --repo and not --git flag" do
+        adapter = initialize_adapter do |args|
+          args.serverside_version = "2.3"
+          args.git = "git@github.com:engineyard/todo.git"
+        end
+        command = deploy_command(adapter)
+        expect(command).to match(/--git/)
+        expect(command).not_to match(/--repo/)
+      end
+
+      it "should set --archive" do
+        adapter = initialize_adapter do |args|
+          args.serverside_version = "2.3"
+          args.archive = "url"
+        end
+        command = deploy_command(adapter)
+        expect(command).to match(/--archive/)
+      end
+    end
+  end
 end
