@@ -27,7 +27,7 @@ This example is adapted from the engineyard gem:
     def adapter(app, verbose)
       EY::Serverside::Adapter.new("/usr/local/ey_resin/ruby/bin") do |args|
         args.app           = app.name
-        args.repo          = app.repository_uri
+        args.git           = app.repository_uri
         args.instances     = environment.instances.map { |i| {:hostname => i.public_hostname, :roles => [i.role], :name => i.name} }
         args.verbose       = verbose || ENV['DEBUG']
         args.stack         = environment.stack_name

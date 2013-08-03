@@ -8,6 +8,15 @@ module EY
     class Adapter
       class Action
 
+        class << self
+          attr_accessor :options
+
+          def option(*args)
+            self.options ||= []
+            options << Option.new(*args)
+          end
+        end
+
         GEM_NAME = 'engineyard-serverside'
         BIN_NAME = GEM_NAME
 
@@ -34,16 +43,7 @@ module EY
         end
 
         def verbose
-          @arguments[:verbose]
-        end
-
-        class << self
-          attr_accessor :options
-
-          def option(*args)
-            self.options ||= []
-            options << Option.new(*args)
-          end
+          @arguments.verbose
         end
 
       private
@@ -90,23 +90,40 @@ module EY
         # Returns an instance of Command.
         def action_command
           Command.new(serverside_command_path, @serverside_version, *task) do |cmd|
-            applicable_options.each do |option|
-              value = @arguments[option.name]
-
-              # only options with a value or with `:include` are used as
-              # command flags.
-              if (!value && option.include?) || value
-                cmd.send("#{option.type}_argument", option.to_switch, value)
-              end
+            given_applicable_options = given_options & applicable_options
+            given_applicable_options.each do |option|
+              cmd.send("#{option.type}_argument", option.to_switch, @arguments.send(option.name))
             end
           end
         end
 
+        # only options with a value or with `:include` are used as command flags.
+        #
+        # This is not constrained to applicable options because we need to
+        # error if there are duplicate options given even if the version does
+        # not support those options.
+        #
+        # Primarily, this is for :git and :archive. If both are given for a
+        # version that doesn't support it, it's still an error. We don't want
+        # to exclude archive from a older version and then perform a git
+        # deploy, which really we should have errored for receiving both.
+        def given_options
+          @given_options ||= self.class.options.select do |option|
+            @arguments.send(option.name) || option.include?
+          end
+        end
+
+        def required_options
+          applicable_options.select do |option|
+            option.required_on_version?(@serverside_version)
+          end
+        end
+
         def validate!
-          applicable_options.each do |option|
-            if option.required? && !@arguments[option.name]
-              raise ArgumentError, "Required field '#{option.name}' not provided."
-            end
+          missing = required_options - given_options
+          unless missing.empty?
+            options_s = missing.map{|option| option.name}.join(', ')
+            raise ArgumentError, "Required fields [#{options_s}] not provided."
           end
         end
 

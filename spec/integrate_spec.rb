@@ -13,14 +13,17 @@ describe EY::Serverside::Adapter::Integrate do
   it_should_behave_like "it accepts serverside_version"
 
   it_should_require :app
-  it_should_require :environment_name
-  it_should_require :account_name
+  it_should_require :environment_name, %w[2.0.0 2.1.0 2.2.0 2.3.0]
+  it_should_require :account_name,     %w[2.0.0 2.1.0 2.2.0 2.3.0]
   it_should_require :stack
   it_should_require :instances
   it_should_require :framework_env
 
-  it_should_ignore_requirement_for_version :environment_name, '1.6.4'
-  it_should_ignore_requirement_for_version :account_name,     '1.6.4'
+  it_should_ignore_requirement :environment_name, '1.6.4'
+  it_should_ignore_requirement :account_name,     '1.6.4'
+
+  it_should_exclude_from_command :environment_name, %w[1.6.4]
+  it_should_exclude_from_command :account_name,     %w[1.6.4]
 
   context "with valid arguments" do
     let(:command) do

@@ -8,13 +8,13 @@ module ArgumentsHelpers
   def valid_options
     {
       :app              => 'rackapp',
-      :environment_name => 'rackapp_production',
       :account_name     => 'ey',
+      #:archive          => 'https://github.com/engineyard/engineyard-serverside/archive/master.zip',
+      :environment_name => 'rackapp_production',
       :framework_env    => 'production',
+      :git              => 'git@github.com:engineyard/engineyard-serverside.git',
       :instances        => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
       :ref              => 'master',
-      :repo             => 'git@github.com:engineyard/engineyard-serverside.git',
-      :archive          => 'https://github.com/engineyard/engineyard-serverside/archive/master.zip',
       :stack            => 'nginx_unicorn',
     }
   end
@@ -47,32 +47,51 @@ module ArgumentsHelpers
 end
 
 module RequiredFieldHelpers
-  def it_should_require(field)
+  def it_should_require(field, versions=[:all])
     context "field #{field}" do
-      it "is just fine when #{field} is there" do
-        lambda { described_class.new(:arguments => valid_arguments) }.should_not raise_error
-      end
+      versions.each do |version|
+        on_versions = version == :all ? "on all versions" : "on version ~> #{version}"
+        context on_versions do
+          it "is fine when #{field} is there" do
+            arguments = valid_arguments
+            arguments.serverside_version = version unless version == :all
+            expect { described_class.new(:arguments => arguments) }.to_not raise_error
+          end
 
-      it "raises an error if #{field} is missing" do
-        lambda { described_class.new(:arguments => arguments_without(field)) }.should raise_error(ArgumentError)
+          it "raises an error if #{field} is missing" do
+            arguments = arguments_without(field)
+            arguments.serverside_version = version unless version == :all
+            expect { described_class.new(:arguments => arguments) }.to raise_error(ArgumentError)
+          end
+        end
       end
     end
   end
 
-  def it_should_ignore_requirement_for_version(field, version)
-    context "field #{field} on version #{version}" do
-      it "is does not require #{field}" do
-        arguments = arguments_without(field)
-        arguments.serverside_version = version
-        lambda { described_class.new(:arguments => arguments) }.should_not raise_error
+  def it_should_ignore_requirement(field, version)
+    context "field #{field}" do
+      context "on version ~> #{version}" do
+        it "is not required" do
+          arguments = arguments_without(field)
+          arguments.serverside_version = version
+          lambda { described_class.new(:arguments => arguments) }.should_not raise_error
+        end
       end
+    end
+  end
 
-      it "it does not include #{field} in the command, even if it is set" do
-        arguments = valid_arguments
-        arguments.serverside_version = version
-        action = described_class.new(:arguments => arguments)
-        commands = all_commands(action)
-        commands.last.should_not include(EY::Serverside::Adapter::Option.new(field, :string).to_switch)
+  def it_should_exclude_from_command(field, versions)
+    context "field #{field}" do
+      versions.each do |version|
+        context "on version ~> #{version}" do
+          it "is not included #{field} in the command" do
+            arguments = valid_arguments
+            arguments.serverside_version = version
+            action = described_class.new(:arguments => arguments)
+            commands = all_commands(action)
+            commands.last.should_not include(EY::Serverside::Adapter::Option.new(field, :string).to_switch)
+          end
+        end
       end
     end
   end
@@ -128,7 +147,7 @@ RSpec.configure do |config|
     :stack            => '--stack',
     :framework_env    => '--framework-env',
     :ref              => '--ref',
-    :repo             => '--repo',
+    :git              => '--git',
     :migrate          => '--migrate',
   }.each do |arg, switch|
     shared_examples_for "it accepts #{arg}" do
@@ -156,6 +175,15 @@ RSpec.configure do |config|
     it "omits --config when you don't give it config" do
       adapter = described_class.new(:arguments => arguments_without(:config))
       last_command(adapter).should_not include('--config')
+    end
+  end
+
+  shared_examples_for "it accepts archive" do
+    it "puts the --archive arg in the command line" do
+      arguments = arguments_without(:git)
+      arguments.archive = 'word'
+      adapter = described_class.new(:arguments => arguments)
+      last_command(adapter).should =~ /--archive word/
     end
   end
 

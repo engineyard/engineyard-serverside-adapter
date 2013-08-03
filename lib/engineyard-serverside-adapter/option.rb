@@ -25,8 +25,14 @@ module EY
           @options[:include]
         end
 
-        def required?
-          @options[:required]
+        def required_on_version?(serverside_version)
+          case @options[:required]
+          when true
+            true
+          when String
+            requirement = Gem::Requirement.create(@options[:required])
+            requirement.satisfied_by?(serverside_version)
+          end
         end
 
       end

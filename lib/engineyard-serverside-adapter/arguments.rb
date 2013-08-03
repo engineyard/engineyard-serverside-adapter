@@ -3,56 +3,33 @@ module EY
     class Adapter
       class Arguments
 
-        def self.nonempty_writer(*names)
+        def self.nonempty_attr_accessor(*names)
           names.each do |name|
             define_method(name) do
-              self[name]
+              instance_variable_get("@#{name}")
             end
 
             define_method(:"#{name}=") do |value|
               if value.nil? || value.to_s.empty?
                 raise ArgumentError, "Value for '#{name}' must be non-empty."
               end
-              self[name] = value
+              instance_variable_set("@#{name}", value)
             end
           end
         end
 
-        def self.writer(*names)
-          names.each do |name|
-            define_method(name) do
-              self[name]
-            end
-
-            define_method(:"#{name}=") do |value|
-              self[name] = value
-            end
+        def self.aliased_attribute(pairs)
+          pairs.each do |from, to|
+            alias_method from, to
+            alias_method :"#{from}=", "#{to}="
           end
         end
 
-        nonempty_writer :app, :environment_name, :account_name, :framework_env,
-          :ref, :repo, :serverside_version, :stack, :archive, :git
-        writer :config, :migrate, :verbose
-
-        def initialize(data={})
-          @data = data
-        end
-
-        def dup
-          self.class.new(@data.dup)
-        end
-
-        def []=(key, val)
-          @data[key.to_sym] = val
-        end
-
-        def [](key)
-          @data[key.to_sym]
-        end
-
-        def key?(key)
-          @data.key?(key.to_sym)
-        end
+        nonempty_attr_accessor :app, :account_name, :archive, :environment_name
+        nonempty_attr_accessor :framework_env, :git, :ref, :serverside_version, :stack
+        attr_accessor :config, :migrate, :verbose
+        attr_reader :instances
+        alias repo git # for versions where --repo is required, it is accessed via this alias
 
         def instances=(instances)
           unless instances.respond_to?(:each)
@@ -69,12 +46,12 @@ module EY
             end
           end
 
-          self[:instances] = instances
+          @instances = instances
         end
 
         # Uses Gem::Version.create to validate the version string
         def serverside_version=(value)
-          self[:serverside_version] = Gem::Version.create(value.dup) # dup b/c Gem::Version sometimes modifies its argument :(
+          @serverside_version = Gem::Version.create(value.dup) # dup b/c Gem::Version sometimes modifies its argument :(
         end
 
       end
