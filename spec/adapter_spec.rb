@@ -11,6 +11,7 @@ shared_examples_for "a serverside action" do
       args.ref              = 'master'
       args.git              = 'git@github.com:engineyard/engineyard-serverside.git'
       args.stack            = 'nginx_unicorn'
+      args.serverside_version = serverside_version
       args
     end
   end
@@ -88,6 +89,7 @@ shared_examples_for "a serverside action" do
         args.ref              = 'master'
         args.git              = 'git@github.com:engineyard/engineyard-serverside.git'
         args.stack            = 'nginx_unicorn'
+        args.serverside_version = serverside_version
         args
       end
 
@@ -154,6 +156,7 @@ describe EY::Serverside::Adapter do
         args.ref              = 'master'
         args.git              = 'git@github.com:engineyard/engineyard-serverside.git'
         args.stack            = 'nginx_unicorn'
+        args.serverside_version = serverside_version
       end
     end
 

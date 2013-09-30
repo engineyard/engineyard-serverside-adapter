@@ -6,6 +6,7 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_behave_like "it accepts app"
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts archive"
+  it_should_behave_like "it accepts clean"
   it_should_behave_like "it accepts environment_name"
   it_should_behave_like "it accepts framework_env"
   it_should_behave_like "it accepts git"
@@ -24,6 +25,7 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_require :stack
   it_should_require :ref,  %w[1.6.4 2.0.0 2.1.0 2.2.0]
   it_should_require :git,  %w[1.6.4 2.0.0 2.1.0 2.2.0]
+  it_should_require :serverside_version
 
   it_should_ignore_requirement :environment_name, '1.6.4'
   it_should_ignore_requirement :account_name,     '1.6.4'
@@ -51,7 +53,7 @@ describe EY::Serverside::Adapter::Deploy do
         arguments.ref                = 'master'
         arguments.git                = 'git@github.com:engineyard/engineyard-serverside.git'
         arguments.stack              = "nginx_unicorn"
-        arguments.serverside_version = '2.3.0'
+        arguments.serverside_version = serverside_version
         block.call arguments if block
       end
       last_command(adapter)
@@ -68,7 +70,7 @@ describe EY::Serverside::Adapter::Deploy do
         arguments.instances          = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
         arguments.migrate            = 'rake db:migrate'
         arguments.stack              = "nginx_unicorn"
-        arguments.serverside_version = '2.3.0'
+        arguments.serverside_version = serverside_version
         block.call arguments if block_given?
       end
       last_command(adapter)
@@ -81,7 +83,7 @@ describe EY::Serverside::Adapter::Deploy do
     it "invokes exactly the right command" do
       deploy_command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_#{serverside_version}_",
         "deploy",
         "--account-name ey",
         "--app rackapp",
@@ -174,16 +176,17 @@ describe EY::Serverside::Adapter::Deploy do
   context "with git deploy" do
     let(:command) do
       adapter = described_class.new do |arguments|
-        arguments.app              = "rackapp"
-        arguments.environment_name = 'rackapp_production'
-        arguments.account_name     = 'ey'
-        arguments.framework_env    = 'production'
-        arguments.config           = {'a' => 1}
-        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        arguments.migrate          = 'rake db:migrate'
-        arguments.ref              = 'master'
-        arguments.git              = 'git@github.com:engineyard/engineyard-serverside.git'
-        arguments.stack            = "nginx_unicorn"
+        arguments.app                = "rackapp"
+        arguments.environment_name   = 'rackapp_production'
+        arguments.account_name       = 'ey'
+        arguments.framework_env      = 'production'
+        arguments.config             = {'a' => 1}
+        arguments.instances          = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.migrate            = 'rake db:migrate'
+        arguments.ref                = 'master'
+        arguments.git                = 'git@github.com:engineyard/engineyard-serverside.git'
+        arguments.stack              = "nginx_unicorn"
+        arguments.serverside_version = '2.3.0'
       end
       last_command(adapter)
     end
@@ -191,7 +194,7 @@ describe EY::Serverside::Adapter::Deploy do
     it "invokes exactly the right command" do
       command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_2.3.0_",
         "deploy",
         "--account-name ey",
         "--app rackapp",
@@ -220,7 +223,7 @@ describe EY::Serverside::Adapter::Deploy do
         args.migrate          = false
         args.stack            = "nginx_unicorn"
         args.archive          = 'https://github.com/engineyard/engineyard-serverside/archive/master.zip'
-        args.serverside_version = EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
+        args.serverside_version = '2.3.0'
       end
 
       last_command(adapter)
@@ -229,7 +232,7 @@ describe EY::Serverside::Adapter::Deploy do
     it "invokes exactly the right command" do
       command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_2.3.0_",
         "deploy",
         "--account-name ey",
         "--app rackapp",
@@ -259,6 +262,7 @@ describe EY::Serverside::Adapter::Deploy do
         arguments.ref              = 'master'
         arguments.git              = 'git@github.com:engineyard/engineyard-serverside.git'
         arguments.stack            = "nginx_unicorn"
+        arguments.serverside_version = '2.3.0'
       end
       last_command(adapter)
     end
@@ -270,7 +274,7 @@ describe EY::Serverside::Adapter::Deploy do
     it "invokes exactly the right command" do
       command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_2.3.0_",
         "deploy",
         "--account-name ey",
         "--app rackapp",
