@@ -14,6 +14,7 @@ describe EY::Serverside::Adapter::EnableMaintenance do
   it_should_require :environment_name, %w[2.0.0 2.1.0 2.2.0 2.3.0]
   it_should_require :account_name,     %w[2.0.0 2.1.0 2.2.0 2.3.0]
   it_should_require :instances
+  it_should_require :serverside_version
 
   it_should_ignore_requirement :environment_name, '1.6.4'
   it_should_ignore_requirement :account_name,     '1.6.4'
@@ -25,10 +26,11 @@ describe EY::Serverside::Adapter::EnableMaintenance do
 
     let(:command) do
       adapter = described_class.new do |arguments|
-        arguments.app              = "rackapp"
-        arguments.environment_name = "rackapp_production"
-        arguments.account_name     = "ey"
-        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.app                = "rackapp"
+        arguments.environment_name   = "rackapp_production"
+        arguments.account_name       = "ey"
+        arguments.instances          = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.serverside_version = serverside_version
       end
       last_command(adapter)
     end
@@ -36,7 +38,7 @@ describe EY::Serverside::Adapter::EnableMaintenance do
     it "invokes exactly the right command" do
       command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_#{serverside_version}_",
         "enable_maintenance",
         "--account-name ey",
         "--app rackapp",

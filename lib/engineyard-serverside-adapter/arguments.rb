@@ -18,16 +18,9 @@ module EY
           end
         end
 
-        def self.aliased_attribute(pairs)
-          pairs.each do |from, to|
-            alias_method from, to
-            alias_method :"#{from}=", "#{to}="
-          end
-        end
-
         nonempty_attr_accessor :app, :account_name, :archive, :environment_name
-        nonempty_attr_accessor :framework_env, :git, :ref, :serverside_version, :stack
-        attr_accessor :config, :migrate, :verbose
+        nonempty_attr_accessor :framework_env, :git, :ref, :stack
+        attr_accessor :config, :migrate, :verbose, :serverside_version
         attr_reader :instances
         alias repo git # for versions where --repo is required, it is accessed via this alias
 
@@ -49,8 +42,10 @@ module EY
           @instances = instances
         end
 
-        # Uses Gem::Version.create to validate the version string
         def serverside_version=(value)
+          if value.nil? || value.to_s.empty?
+            raise ArgumentError, "Value for 'serverside_version' must be non-empty."
+          end
           @serverside_version = Gem::Version.create(value.dup) # dup b/c Gem::Version sometimes modifies its argument :(
         end
 

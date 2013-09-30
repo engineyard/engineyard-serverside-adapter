@@ -29,7 +29,7 @@ module EY
 
           block.call @arguments if block
 
-          @serverside_version = Gem::Version.create(@arguments.serverside_version || ENGINEYARD_SERVERSIDE_VERSION.dup)
+          @serverside_version = @arguments.serverside_version
 
           validate!
         end
@@ -120,6 +120,10 @@ module EY
         end
 
         def validate!
+          unless @serverside_version
+            raise ArgumentError, "Required field [serverside_version] not provided."
+          end
+
           missing = required_options - given_options
           unless missing.empty?
             options_s = missing.map{|option| option.name}.join(', ')
