@@ -4,18 +4,30 @@ require 'bundler/setup'
 require 'engineyard-serverside-adapter'
 require 'pp'
 
+begin
+  specs = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new("engineyard-serverside"))
+  ENGINEYARD_SERVERSIDE_VERSION = specs.map {|spec,| spec.version}.sort.last.to_s
+rescue
+  ENGINEYARD_SERVERSIDE_VERSION = '2.3.1'
+end
+
 module ArgumentsHelpers
+  def serverside_version
+    ENGINEYARD_SERVERSIDE_VERSION
+  end
+
   def valid_options
     {
-      :app              => 'rackapp',
-      :account_name     => 'ey',
-      #:archive          => 'https://github.com/engineyard/engineyard-serverside/archive/master.zip',
-      :environment_name => 'rackapp_production',
-      :framework_env    => 'production',
-      :git              => 'git@github.com:engineyard/engineyard-serverside.git',
-      :instances        => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
-      :ref              => 'master',
-      :stack            => 'nginx_unicorn',
+      :app                => 'rackapp',
+      :account_name       => 'ey',
+      #:archive            => 'https://github.com/engineyard/engineyard-serverside/archive/master.zip',
+      :environment_name   => 'rackapp_production',
+      :framework_env      => 'production',
+      :git                => 'git@github.com:engineyard/engineyard-serverside.git',
+      :instances          => [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}],
+      :ref                => 'master',
+      :stack              => 'nginx_unicorn',
+      :serverside_version => serverside_version,
     }
   end
 
@@ -110,14 +122,14 @@ RSpec.configure do |config|
 
       # of course, the only way to be sure is to actually run it, but
       # this gives us regression-proofing
-      version = EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION
+      version = serverside_version
       escaped_version = version.gsub(/\./, '\\.')
       installation_command.should == "(gem list engineyard-serverside | grep 'engineyard-serverside ' | egrep -q '#{escaped_version}[,)]') || (sudo sh -c 'cd `mktemp -d` && gem install engineyard-serverside --no-rdoc --no-ri -v #{version}')"
 
 
       installation_command.should =~ /gem list engineyard-serverside/
       installation_command.should =~ /egrep -q /
-      installation_command.should =~ /gem install engineyard-serverside.*-v #{Regexp.quote EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}/
+      installation_command.should =~ /gem install engineyard-serverside.*-v #{Regexp.quote serverside_version}/
     end
   end
 

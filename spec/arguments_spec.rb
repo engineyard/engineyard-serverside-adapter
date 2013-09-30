@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe EY::Serverside::Adapter::Arguments do
   def raises_argument_error(message = nil, &block)
-    lambda {
+    expect {
       block.call(described_class.new)
-    }.should raise_error(ArgumentError, message)
+    }.to raise_error(ArgumentError, message)
   end
 
   it "raises an ArgumentError immediately when instances is empty" do
@@ -31,4 +31,13 @@ describe EY::Serverside::Adapter::Arguments do
     end
   end
 
+  it "raises an ArgumentError immediately when serverside_version is empty" do
+    raises_argument_error(/Value for 'serverside_version' must be non-empty/) do |arguments|
+      arguments.serverside_version = nil
+    end
+
+    raises_argument_error(/Value for 'serverside_version' must be non-empty/) do |arguments|
+      arguments.serverside_version = ''
+    end
+  end
 end

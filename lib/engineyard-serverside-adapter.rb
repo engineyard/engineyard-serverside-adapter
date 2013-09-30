@@ -1,9 +1,9 @@
 require 'pathname'
+require 'engineyard-serverside-adapter/version'
 
 module EY
   module Serverside
     class Adapter
-      require 'engineyard-serverside-adapter/version'
       autoload :Action,                 'engineyard-serverside-adapter/action'
       autoload :Arguments,              'engineyard-serverside-adapter/arguments'
       autoload :Command,                'engineyard-serverside-adapter/command'

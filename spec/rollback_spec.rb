@@ -18,6 +18,7 @@ describe EY::Serverside::Adapter::Rollback do
   it_should_require :framework_env
   it_should_require :instances
   it_should_require :stack
+  it_should_require :serverside_version
 
   it_should_ignore_requirement :environment_name, '1.6.4'
   it_should_ignore_requirement :account_name,     '1.6.4'
@@ -28,13 +29,14 @@ describe EY::Serverside::Adapter::Rollback do
   context "with valid arguments" do
     let(:command) do
       adapter = described_class.new do |arguments|
-        arguments.app              = "rackapp"
-        arguments.environment_name = "rackapp_production"
-        arguments.account_name     = "ey"
-        arguments.framework_env    = 'production'
-        arguments.instances        = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
-        arguments.stack            = "nginx_unicorn"
-        arguments.config           = {'a' => 1}
+        arguments.app                = "rackapp"
+        arguments.environment_name   = "rackapp_production"
+        arguments.account_name       = "ey"
+        arguments.framework_env      = 'production'
+        arguments.instances          = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
+        arguments.stack              = "nginx_unicorn"
+        arguments.config             = {'a' => 1}
+        arguments.serverside_version = serverside_version
       end
       last_command(adapter)
     end
@@ -46,7 +48,7 @@ describe EY::Serverside::Adapter::Rollback do
     it "invokes exactly the right command" do
       command.should == [
         "engineyard-serverside",
-        "_#{EY::Serverside::Adapter::ENGINEYARD_SERVERSIDE_VERSION}_",
+        "_#{serverside_version}_",
         "deploy rollback",
         "--account-name ey",
         "--app rackapp",
