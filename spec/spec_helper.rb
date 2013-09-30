@@ -133,6 +133,25 @@ RSpec.configure do |config|
     end
   end
 
+  shared_examples_for "it accepts clean" do
+    context "the --clean arg" do
+      it "is present when you set clean to true" do
+        adapter = described_class.new(:arguments => arguments_with(:clean => true))
+        last_command(adapter).should =~ /--clean/
+      end
+
+      it "is absent when you set clean to false" do
+        adapter = described_class.new(:arguments => arguments_with(:clean => false))
+        last_command(adapter).should_not =~ /--clean/
+      end
+
+      it "is absent when you omit clean" do
+        adapter = described_class.new(:arguments => valid_arguments)
+        last_command(adapter).should_not =~ /--clean/
+      end
+    end
+  end
+
   shared_examples_for "it accepts verbose" do
     context "the --verbose arg" do
       it "is present when you set verbose to true" do

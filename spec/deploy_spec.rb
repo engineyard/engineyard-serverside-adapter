@@ -6,6 +6,7 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_behave_like "it accepts app"
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts archive"
+  it_should_behave_like "it accepts clean"
   it_should_behave_like "it accepts environment_name"
   it_should_behave_like "it accepts framework_env"
   it_should_behave_like "it accepts git"
