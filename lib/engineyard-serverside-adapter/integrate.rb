@@ -5,6 +5,7 @@ module EY
 
         option :app,              :string,    :required => true
         option :account_name,     :string,    :required => true, :version => '>=2.0.0'
+        option :clean,            :boolean,                      :version => '>= 2.3.1'
         option :environment_name, :string,    :required => true, :version => '>=2.0.0'
         option :stack,            :string,    :required => true
         option :instances,        :instances, :required => true
