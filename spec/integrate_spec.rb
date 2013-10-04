@@ -4,7 +4,6 @@ describe EY::Serverside::Adapter::Integrate do
   it_should_behave_like "it installs engineyard-serverside"
 
   it_should_behave_like "it accepts app"
-  it_should_behave_like "it accepts clean"
   it_should_behave_like "it accepts environment_name"
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts framework_env"
