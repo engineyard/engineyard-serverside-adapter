@@ -2,7 +2,7 @@
 
 ## NEXT
 
-  *
+  * Remove --clean option form Integrate command. We've decided that integrate should just always run clean.
 
 ## v2.2.1 (2013-10-03)
 
