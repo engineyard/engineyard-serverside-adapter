@@ -36,6 +36,7 @@ describe EY::Serverside::Adapter::Deploy do
   it_should_exclude_from_command :repo,             %w[2.3.0]
   it_should_exclude_from_command :git,              %w[1.6.4 2.0.0 2.1.0 2.2.0]
   it_should_exclude_from_command :archive,          %w[1.6.4 2.0.0 2.1.0 2.2.0]
+  it_should_exclude_from_command :clean,            %w[1.6.4 2.0.0 2.1.0 2.2.0 2.3.1]
 
   it_should_behave_like "it treats config as optional"
   it_should_behave_like "it treats migrate as optional"

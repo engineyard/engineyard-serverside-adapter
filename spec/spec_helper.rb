@@ -4,12 +4,8 @@ require 'bundler/setup'
 require 'engineyard-serverside-adapter'
 require 'pp'
 
-begin
-  specs = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new("engineyard-serverside"))
-  ENGINEYARD_SERVERSIDE_VERSION = specs.map {|spec,| spec.version}.sort.last.to_s
-rescue
-  ENGINEYARD_SERVERSIDE_VERSION = '2.3.1'
-end
+# Default version to use in tests when one is not specified
+ENGINEYARD_SERVERSIDE_VERSION = '2.3.2'
 
 module ArgumentsHelpers
   def serverside_version
