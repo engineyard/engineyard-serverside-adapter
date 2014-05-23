@@ -7,6 +7,7 @@ module EY
       autoload :Action,                 'engineyard-serverside-adapter/action'
       autoload :Arguments,              'engineyard-serverside-adapter/arguments'
       autoload :Command,                'engineyard-serverside-adapter/command'
+      autoload :CommandOptions,         'engineyard-serverside-adapter/command_options'
 
       # Backwards compatibility
       autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'

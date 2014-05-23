@@ -14,13 +14,10 @@ module EY
         autoload :Restart,                'engineyard-serverside-adapter/action/restart'
         autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
 
-        class << self
-          attr_accessor :options
+        extend CommandOptions::ClassMethods
 
-          def option(*args)
-            self.options ||= []
-            options << Option.new(*args)
-          end
+        def command_options
+          self.class.command_options
         end
 
         GEM_NAME = 'engineyard-serverside'
@@ -53,10 +50,6 @@ module EY
         end
 
       private
-
-        def applicable_options
-          @applicable_options ||= self.class.options.select { |option| option.on_version?(@serverside_version) }
-        end
 
         def check_and_install_command
           "(#{check_command}) || (#{install_command})"
@@ -114,15 +107,17 @@ module EY
         # to exclude archive from a older version and then perform a git
         # deploy, which really we should have errored for receiving both.
         def given_options
-          @given_options ||= self.class.options.select do |option|
+          @given_options ||= command_options.select do |option|
             @arguments.send(option.name) || option.include?
           end
         end
 
+        def applicable_options
+          command_options.applicable_on_version(@serverside_version)
+        end
+
         def required_options
-          applicable_options.select do |option|
-            option.required_on_version?(@serverside_version)
-          end
+          command_options.required_on_version(@serverside_version)
         end
 
         def validate!
