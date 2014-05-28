@@ -32,8 +32,6 @@ module EY
 
           block.call @arguments if block
 
-          @serverside_version = @arguments.serverside_version
-
           validate!
         end
 
@@ -91,7 +89,7 @@ module EY
           Command.new(serverside_command_path, @serverside_version, *task) do |cmd|
             given_applicable_options = given_options & applicable_options
             given_applicable_options.each do |option|
-              cmd.send("#{option.type}_argument", option.to_switch, @arguments.send(option.name))
+              cmd.argument(option.type, option.to_switch, @arguments[option.name])
             end
           end
         end
@@ -108,19 +106,20 @@ module EY
         # deploy, which really we should have errored for receiving both.
         def given_options
           @given_options ||= command_options.select do |option|
-            @arguments.send(option.name) || option.include?
+            @arguments[option.name] || option.include?
           end
         end
 
         def applicable_options
-          command_options.applicable_on_version(@serverside_version)
+          command_options.applicable(@serverside_version)
         end
 
         def required_options
-          command_options.required_on_version(@serverside_version)
+          command_options.required(@serverside_version)
         end
 
         def validate!
+          @serverside_version = @arguments.serverside_version
           unless @serverside_version
             raise ArgumentError, "Required field [serverside_version] not provided."
           end

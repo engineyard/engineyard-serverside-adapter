@@ -18,13 +18,14 @@ class EY::Serverside::Adapter::CommandOptions
   def add(*args)
     option = EY::Serverside::Adapter::Option.new(*args)
     self.options << option
+    option
   end
 
-  def applicable_on_version(version)
+  def applicable(version)
     select { |option| option.on_version?(version) }
   end
 
-  def required_on_version(version)
+  def required(version)
     select { |option| option.required_on_version?(version) }
   end
 
