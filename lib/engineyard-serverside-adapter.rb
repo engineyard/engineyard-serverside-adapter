@@ -7,12 +7,14 @@ module EY
       autoload :Action,                 'engineyard-serverside-adapter/action'
       autoload :Arguments,              'engineyard-serverside-adapter/arguments'
       autoload :Command,                'engineyard-serverside-adapter/command'
-      autoload :Deploy,                 'engineyard-serverside-adapter/deploy'
-      autoload :DisableMaintenance,     'engineyard-serverside-adapter/disable_maintenance'
-      autoload :EnableMaintenance,      'engineyard-serverside-adapter/enable_maintenance'
-      autoload :Integrate,              'engineyard-serverside-adapter/integrate'
-      autoload :Restart,                'engineyard-serverside-adapter/restart'
-      autoload :Rollback,               'engineyard-serverside-adapter/rollback'
+
+      # Backwards compatibility
+      autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'
+      autoload :DisableMaintenance,     'engineyard-serverside-adapter/action/disable_maintenance'
+      autoload :EnableMaintenance,      'engineyard-serverside-adapter/action/enable_maintenance'
+      autoload :Integrate,              'engineyard-serverside-adapter/action/integrate'
+      autoload :Restart,                'engineyard-serverside-adapter/action/restart'
+      autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
 
       def initialize(gem_bin_path = "", &block)
         @gem_bin_path = Pathname.new(gem_bin_path)

@@ -1,6 +1,6 @@
-module EY
-  module Serverside
-    class Adapter
+module EY::Serverside
+  class Adapter
+    class Action
       class Deploy < Action
 
         option :app,              :string,    :required => true
@@ -36,6 +36,9 @@ module EY
           end
         end
       end
+
+      # backwards compatibility
+      EY::Serverside::Adapter::Deploy = Deploy
     end
   end
 end

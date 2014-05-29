@@ -1,11 +1,13 @@
-module EY
-  module Serverside
-    class Adapter
-      class Restart < Action
+module EY::Serverside
+  class Adapter
+    class Action
+      class Rollback < Action
 
         option :app,              :string,    :required => true
         option :account_name,     :string,    :required => true, :version => '>=2.0.0'
         option :environment_name, :string,    :required => true, :version => '>=2.0.0'
+        option :config,           :json
+        option :framework_env,    :string,    :required => true
         option :instances,        :instances, :required => true
         option :stack,            :string,    :required => true
         option :verbose,          :boolean
@@ -13,10 +15,13 @@ module EY
       private
 
         def task
-          ['restart']
+          ['deploy', 'rollback']
         end
 
       end
+
+      # backwards compatibility
+      EY::Serverside::Adapter::Rollback = Rollback
     end
   end
 end

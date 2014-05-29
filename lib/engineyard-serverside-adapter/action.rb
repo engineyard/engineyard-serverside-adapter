@@ -7,6 +7,12 @@ module EY
   module Serverside
     class Adapter
       class Action
+        autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'
+        autoload :DisableMaintenance,     'engineyard-serverside-adapter/action/disable_maintenance'
+        autoload :EnableMaintenance,      'engineyard-serverside-adapter/action/enable_maintenance'
+        autoload :Integrate,              'engineyard-serverside-adapter/action/integrate'
+        autoload :Restart,                'engineyard-serverside-adapter/action/restart'
+        autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
 
         class << self
           attr_accessor :options
