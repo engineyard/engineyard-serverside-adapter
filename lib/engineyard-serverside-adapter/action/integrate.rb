@@ -11,6 +11,7 @@ module EY::Serverside
         option :instance_roles,   :hash,      :required => true
         option :instances,        :array,     :required => true
         option :framework_env,    :string,    :required => true
+        option :ignore_existing,  :boolean,                      :version => '>=2.4.0'
         option :verbose,          :boolean
 
       private

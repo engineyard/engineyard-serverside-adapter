@@ -21,7 +21,8 @@ module EY
         nonempty_attr_accessor :app, :account_name, :archive, :environment_name
         nonempty_attr_accessor :framework_env, :git, :ref, :stack
 
-        attr_accessor :clean, :config, :migrate, :serverside_version, :verbose
+        attr_accessor :clean, :config, :migrate, :serverside_version, :verbose, :ignore_existing
+
         attr_reader :instance_names, :instance_roles, :instances
         alias repo git # for versions where --repo is required, it is accessed via this alias
 

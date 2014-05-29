@@ -5,7 +5,7 @@ require 'engineyard-serverside-adapter'
 require 'pp'
 
 # Default version to use in tests when one is not specified
-ENGINEYARD_SERVERSIDE_VERSION = '2.3.2'
+ENGINEYARD_SERVERSIDE_VERSION = '2.4.0'
 
 module ArgumentsHelpers
   def serverside_version
@@ -163,6 +163,25 @@ RSpec.configure do |config|
       it "is absent when you omit verbose" do
         adapter = described_class.new(:arguments => valid_arguments)
         last_command(adapter).should_not =~ /--verbose/
+      end
+    end
+  end
+
+  shared_examples_for "it accepts ignore_existing" do
+    context "the --ignore-existing arg" do
+      it "is present when you set ignore_existing to true" do
+        adapter = described_class.new(:arguments => arguments_with(:ignore_existing => true))
+        last_command(adapter).should =~ /--ignore-existing/
+      end
+
+      it "is absent when you set ignore_existing to false" do
+        adapter = described_class.new(:arguments => arguments_with(:ignore_existing => false))
+        last_command(adapter).should_not =~ /--ignore-existing/
+      end
+
+      it "is absent when you omit ignore_existing" do
+        adapter = described_class.new(:arguments => valid_arguments)
+        last_command(adapter).should_not =~ /--ignore-existing/
       end
     end
   end
