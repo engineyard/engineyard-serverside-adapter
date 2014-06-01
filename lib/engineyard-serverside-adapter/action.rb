@@ -7,14 +7,17 @@ module EY
   module Serverside
     class Adapter
       class Action
+        autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'
+        autoload :DisableMaintenance,     'engineyard-serverside-adapter/action/disable_maintenance'
+        autoload :EnableMaintenance,      'engineyard-serverside-adapter/action/enable_maintenance'
+        autoload :Integrate,              'engineyard-serverside-adapter/action/integrate'
+        autoload :Restart,                'engineyard-serverside-adapter/action/restart'
+        autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
 
-        class << self
-          attr_accessor :options
+        extend CommandOptions::ClassMethods
 
-          def option(*args)
-            self.options ||= []
-            options << Option.new(*args)
-          end
+        def command_options
+          self.class.command_options
         end
 
         GEM_NAME = 'engineyard-serverside'
@@ -28,8 +31,6 @@ module EY
           @serverside_bin_name = options[:serverside_bin_name] || BIN_NAME
 
           block.call @arguments if block
-
-          @serverside_version = @arguments.serverside_version
 
           validate!
         end
@@ -47,10 +48,6 @@ module EY
         end
 
       private
-
-        def applicable_options
-          @applicable_options ||= self.class.options.select { |option| option.on_version?(@serverside_version) }
-        end
 
         def check_and_install_command
           "(#{check_command}) || (#{install_command})"
@@ -92,7 +89,7 @@ module EY
           Command.new(serverside_command_path, @serverside_version, *task) do |cmd|
             given_applicable_options = given_options & applicable_options
             given_applicable_options.each do |option|
-              cmd.send("#{option.type}_argument", option.to_switch, @arguments.send(option.name))
+              cmd.argument(option.type, option.to_switch, @arguments[option.name])
             end
           end
         end
@@ -108,18 +105,21 @@ module EY
         # to exclude archive from a older version and then perform a git
         # deploy, which really we should have errored for receiving both.
         def given_options
-          @given_options ||= self.class.options.select do |option|
-            @arguments.send(option.name) || option.include?
+          @given_options ||= command_options.select do |option|
+            @arguments[option.name] || option.include?
           end
+        end
+
+        def applicable_options
+          command_options.applicable(@serverside_version)
         end
 
         def required_options
-          applicable_options.select do |option|
-            option.required_on_version?(@serverside_version)
-          end
+          command_options.required(@serverside_version)
         end
 
         def validate!
+          @serverside_version = @arguments.serverside_version
           unless @serverside_version
             raise ArgumentError, "Required field [serverside_version] not provided."
           end

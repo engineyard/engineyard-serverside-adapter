@@ -8,6 +8,7 @@ describe EY::Serverside::Adapter::Integrate do
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts framework_env"
   it_should_behave_like "it accepts instances"
+  it_should_behave_like "it accepts ignore_existing"
   it_should_behave_like "it accepts stack"
   it_should_behave_like "it accepts verbose"
   it_should_behave_like "it accepts serverside_version"
@@ -25,6 +26,7 @@ describe EY::Serverside::Adapter::Integrate do
 
   it_should_exclude_from_command :environment_name, %w[1.6.4]
   it_should_exclude_from_command :account_name,     %w[1.6.4]
+  it_should_exclude_from_command :ignore_existing,  %w[2.3.8]
 
   context "with valid arguments" do
     let(:command) do
@@ -35,6 +37,7 @@ describe EY::Serverside::Adapter::Integrate do
         arguments.instances          = [{:hostname => 'localhost', :roles => %w[han solo], :name => 'chewie'}]
         arguments.stack              = "nginx_unicorn"
         arguments.framework_env      = "production"
+        arguments.ignore_existing    = true
         arguments.serverside_version = serverside_version
       end
       last_command(adapter)
@@ -49,6 +52,7 @@ describe EY::Serverside::Adapter::Integrate do
         "--app rackapp",
         "--environment-name rackapp_production",
         "--framework-env production",
+        "--ignore-existing",
         "--instance-names localhost:chewie",
         "--instance-roles localhost:han,solo",
         "--instances localhost",

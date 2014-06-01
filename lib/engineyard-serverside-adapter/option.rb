@@ -26,12 +26,18 @@ module EY
         end
 
         def required_on_version?(serverside_version)
+          unless on_version?(serverside_version)
+            return false
+          end
+
           case @options[:required]
           when true
             true
           when String
             requirement = Gem::Requirement.create(@options[:required])
             requirement.satisfied_by?(serverside_version)
+          else
+            false
           end
         end
 

@@ -1,6 +1,6 @@
-module EY
-  module Serverside
-    class Adapter
+module EY::Serverside
+  class Adapter
+    class Action
       class Deploy < Action
 
         option :app,              :string,    :required => true
@@ -11,7 +11,9 @@ module EY
         option :environment_name, :string,    :required => true,      :version => '>= 2.0.0'
         option :git,              :string,                            :version => '>= 2.3.0'
         option :framework_env,    :string,    :required => true
-        option :instances,        :instances, :required => true
+        option :instance_names,   :hash,      :required => true
+        option :instance_roles,   :hash,      :required => true
+        option :instances,        :array,     :required => true
         option :migrate,          :string,                            :include => true
         option :ref,              :string,    :required => '< 2.3.0'
         option :repo,             :string,    :required => '< 2.3.0', :version => '< 2.3.0'
@@ -36,6 +38,9 @@ module EY
           end
         end
       end
+
+      # backwards compatibility
+      EY::Serverside::Adapter::Deploy = Deploy
     end
   end
 end

@@ -22,6 +22,10 @@ module EY
           Escape.shell_command to_argv
         end
 
+        def argument(type, switch, value)
+          send(:"#{type}_argument", switch, value)
+        end
+
         def array_argument(switch, values)
           compacted = values.compact.sort
           if compacted.any?
@@ -39,20 +43,6 @@ module EY
           if pairs.any? {|k,v| !v.nil?}
             @arguments << [switch, pairs.reject { |k,v| v.nil? }.map { |pair| pair.join(':') }.sort]
           end
-        end
-
-        def instances_argument(_, instances)
-          role_pairs = instances.inject({}) do |roles, instance|
-            roles.merge(instance[:hostname] => instance[:roles].join(','))
-          end
-          hash_argument('--instance-roles', role_pairs)
-
-          role_pairs = instances.inject({}) do |roles, instance|
-            roles.merge(instance[:hostname] => instance[:name])
-          end
-          hash_argument('--instance-names', role_pairs)
-
-          array_argument('--instances', instances.map{|i| i[:hostname]})
         end
 
         def json_argument(switch, value)
