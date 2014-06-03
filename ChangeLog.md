@@ -2,6 +2,10 @@
 
 ## NEXT
 
+  *
+
+## v2.3.0 (2014-06-02)
+
   * Support new --ignore-existing option for integrate, which tells rsync not to overwrite existing files on the destination server when syncing existing app files before deploy.
 
 ## v2.2.2 (2013-10-10)
