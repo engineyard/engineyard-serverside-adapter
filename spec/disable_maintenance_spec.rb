@@ -4,6 +4,7 @@ describe EY::Serverside::Adapter::DisableMaintenance do
   it_should_behave_like "it installs engineyard-serverside"
 
   it_should_behave_like "it accepts app"
+  it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts environment_name"
   it_should_behave_like "it accepts account_name"
   it_should_behave_like "it accepts instances"
@@ -21,6 +22,8 @@ describe EY::Serverside::Adapter::DisableMaintenance do
 
   it_should_exclude_from_command :environment_name, %w[1.6.4]
   it_should_exclude_from_command :account_name,     %w[1.6.4]
+
+  it_should_behave_like "it treats config as optional"
 
   context "with valid arguments" do
     let(:command) do

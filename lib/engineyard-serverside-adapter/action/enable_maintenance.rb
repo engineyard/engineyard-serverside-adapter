@@ -5,6 +5,7 @@ module EY::Serverside
 
         option :app,              :string,    :required => true
         option :account_name,     :string,    :required => true, :version => '>=2.0.0'
+        option :config,           :json
         option :environment_name, :string,    :required => true, :version => '>=2.0.0'
         option :instance_names,   :hash,      :required => true
         option :instance_roles,   :hash,      :required => true
