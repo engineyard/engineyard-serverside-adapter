@@ -2,6 +2,10 @@
 
 ## NEXT
 
+  *
+
+## v2.3.1 (2014-06-10)
+
   * Fixes a bug where maintenance actions incorrectly did not accept --config options.
 
 ## v2.3.0 (2014-06-02)
