@@ -233,10 +233,11 @@ RSpec.configure do |config|
     end
   end
 
-  shared_examples_for "it accepts serverside_version" do
+  shared_examples_for "it accepts serverside_version" do |*args|
     it "puts the _VERSION_ command part in the command line" do
-      adapter = described_class.new(:arguments => arguments_with(:serverside_version => '1.2.3'))
-      last_command(adapter).should =~ /engineyard-serverside _1.2.3_/
+      version = args[0] || '1.2.3' # ruby 1.8.7 does not allow for default values of block variables
+      adapter = described_class.new(:arguments => arguments_with(:serverside_version => version))
+      last_command(adapter).should =~ /engineyard-serverside _#{version}_/
     end
   end
 

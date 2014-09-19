@@ -13,6 +13,7 @@ module EY
       autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'
       autoload :DisableMaintenance,     'engineyard-serverside-adapter/action/disable_maintenance'
       autoload :EnableMaintenance,      'engineyard-serverside-adapter/action/enable_maintenance'
+      autoload :MaintenanceStatus,      'engineyard-serverside-adapter/action/maintenance_status'
       autoload :Integrate,              'engineyard-serverside-adapter/action/integrate'
       autoload :Restart,                'engineyard-serverside-adapter/action/restart'
       autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
@@ -34,6 +35,10 @@ module EY
 
       def enable_maintenance(&b)
         EnableMaintenance.new(new_action_args, &b)
+      end
+
+      def maintenance_status(&b)
+        MaintenanceStatus.new(new_action_args, &b)
       end
 
       def integrate(&b)
