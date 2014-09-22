@@ -10,6 +10,7 @@ module EY
         autoload :Deploy,                 'engineyard-serverside-adapter/action/deploy'
         autoload :DisableMaintenance,     'engineyard-serverside-adapter/action/disable_maintenance'
         autoload :EnableMaintenance,      'engineyard-serverside-adapter/action/enable_maintenance'
+        autoload :MaintenanceStatus,      'engineyard-serverside-adapter/action/maintenance_status'
         autoload :Integrate,              'engineyard-serverside-adapter/action/integrate'
         autoload :Restart,                'engineyard-serverside-adapter/action/restart'
         autoload :Rollback,               'engineyard-serverside-adapter/action/rollback'
@@ -33,6 +34,11 @@ module EY
           block.call @arguments if block
 
           validate!
+        end
+
+        def self.version_requirement(version=nil)
+          @version_requirement = Gem::Requirement.create(version) if version
+          @version_requirement
         end
 
         def call(&block)
@@ -122,6 +128,10 @@ module EY
           @serverside_version = @arguments.serverside_version
           unless @serverside_version
             raise ArgumentError, "Required field [serverside_version] not provided."
+          end
+
+          if self.class.version_requirement && !self.class.version_requirement.satisfied_by?(@serverside_version)
+            raise ArgumentError, "This command does not work with #{@serverside_version}. Version must be #{self.class.version_requirement}"
           end
 
           missing = required_options - given_options
