@@ -2,6 +2,10 @@
 
 ## NEXT
 
+  *
+
+## v2.4.0 (2014-09-22)
+
   * Add MaintenanceStatus action that reports maintenance page up/down.
 
 ## v2.3.1 (2014-06-10)
