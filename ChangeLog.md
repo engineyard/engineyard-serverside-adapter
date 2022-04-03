@@ -4,6 +4,10 @@
 
   *
 
+## v2.5.0 (2022-04-0e) 
+
+  * Removes `--no-ri` and `--no-rdoc` as they are no longer supported in later versions of ruby.
+
 ## v2.4.0 (2014-09-22)
 
   * Add MaintenanceStatus action that reports maintenance page up/down.
