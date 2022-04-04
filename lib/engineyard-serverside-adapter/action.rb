@@ -76,7 +76,7 @@ module EY
           #
           # rubygems help suggests that --remote will disable this
           # behavior, but it doesn't.
-          install_command = "cd `mktemp -d` && #{gem_command_path} install #{@serverside_gem_name} --no-rdoc --no-ri -v #{@serverside_version}"
+          install_command = "cd `mktemp -d` && #{gem_command_path} install #{@serverside_gem_name} -v #{@serverside_version}"
           Escape.shell_command(['sudo', 'sh', '-c', install_command])
         end
 
