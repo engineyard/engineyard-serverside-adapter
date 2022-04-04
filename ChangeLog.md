@@ -4,7 +4,7 @@
 
   *
 
-## v2.5.0 (2022-04-0e) 
+## v2.5.0 (2022-04-04) 
 
   * Removes `--no-ri` and `--no-rdoc` as they are no longer supported in later versions of ruby.
 
